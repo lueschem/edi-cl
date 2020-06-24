@@ -1,0 +1,47 @@
+---
+- name: Ensures edi-boot-shim config.d directory exists.
+  file:
+    path: /etc/edi-boot-shim/edi-boot-shim.cfg.d
+    state: directory
+
+- name: Configure edi-boot-shim for multiboot.
+  template:
+    src: multiboot.cfg
+    dest: /etc/edi-boot-shim/edi-boot-shim.cfg.d
+
+- name: Install edi-boot-shim.
+  apt:
+    name: edi-boot-shim
+    install_recommends: no
+
+- name: Create boot firmware directory.
+  file:
+    path: "{{ uboot_location }}"
+    state: directory
+
+- name: Copy the raw boot script to the boot folder.
+  copy:
+    src: boot.scr.txt
+    dest: "{{ uboot_location }}"
+
+- name: Create boot script.
+  command: mkimage -A arm -T script -O linux -d boot.scr.txt boot.scr
+  args:
+    chdir: "{{ uboot_location }}"
+    creates: "{{ uboot_location }}/boot.scr"
+
+- name: Create u-boot directory on data partition.
+  file:
+    path: /data/u-boot
+    state: directory
+
+- name: Configure u-boot-tools.
+  template:
+    src: fw_env.config
+    dest: /data/u-boot
+
+- name: Create symbolic link for the u-boot-tools config.
+  file:
+    src: "/data/u-boot/fw_env.config"
+    dest: "/etc/fw_env.config"
+    state: link

@@ -1,0 +1,6 @@
+---
+bare_metal_packages:
+  - initramfs-tools
+  - udev
+  - "{{ kernel_image }}"
+

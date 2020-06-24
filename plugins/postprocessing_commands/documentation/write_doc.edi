@@ -1,0 +1,8 @@
+#!/bin/bash
+
+set -o errexit
+set -o nounset
+
+source {{ imx_timestamp }}
+
+{{ edi_current_plugin_directory }}/write_doc --project "{{ edi_configuration_name }}" --release "${BUILD_TIMESTAMP}" --author "{{ author }}" --input "{{ imx_rootfs }}/usr/share/doc" --output "{{ imx_documentation }}" --config "{{ edi_project_directory }}/{{ edi_configuration_name }}.yml" --log "{{ edi_log_level }}"

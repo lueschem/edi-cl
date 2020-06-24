@@ -1,0 +1,72 @@
+boot_scr_filesize=${filesize}
+
+# constant values
+setenv mender_boot_part_A 3
+setenv mender_boot_part_hex_A 3
+setenv mender_boot_part_B 4
+setenv mender_boot_part_hex_B 4
+setenv bootlimit 1
+
+# initialize and store variables on first boot
+if test "${edi_first_boot_done}" != "true"
+then
+    echo "Going to write environment on first boot!"
+    setenv bootcount 0
+    setenv upgrade_available 0
+    setenv mender_boot_part ${mender_boot_part_A}
+    setenv mender_boot_part_hex ${mender_boot_part_hex_A}
+    setenv edi_first_boot_done true
+    saveenv
+fi
+
+if test ${upgrade_available} = 1
+then
+    # mender will reset bootcount within EnableUpdatedPartition
+    setexpr bootcount ${bootcount} + 1
+    saveenv
+else
+    setenv bootcount 0
+fi
+
+if test ${bootcount} -gt ${bootlimit}
+then
+    echo "Switching back to previous setup due to hitting bootlimit!"
+    if test ${mender_boot_part} = ${mender_boot_part_A}
+    then
+        setenv mender_boot_part ${mender_boot_part_B}
+        setenv mender_boot_part_hex ${mender_boot_part_hex_B}
+    else
+        setenv mender_boot_part ${mender_boot_part_A}
+        setenv mender_boot_part_hex ${mender_boot_part_hex_A}
+    fi
+    setenv upgrade_available 0
+    saveenv
+fi
+
+setexpr secondary_scriptaddr ${scriptaddr} + ${boot_scr_filesize}
+
+setenv edi_mmc_device ${dev}:${mender_boot_part_hex}
+
+if test "${iface}" == "usb"
+then
+    setenv edi_root_device /dev/sda${mender_boot_part}
+else
+    setenv edi_root_device /dev/mmcblk2p${mender_boot_part}
+fi
+
+if ext4load mmc ${edi_mmc_device} ${secondary_scriptaddr} /boot/boot.scr
+then
+    echo "Successfully loaded secondary boot script."
+else
+    echo "Trying to reset an environment setup that does not match the current installation!"
+    setenv edi_first_boot_done false
+    saveenv
+    reset
+fi
+
+source ${secondary_scriptaddr}
+
+if test ${upgrade_available} = 1
+then
+    reset
+fi
