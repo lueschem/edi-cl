@@ -1,10 +1,8 @@
 - hosts: all
 
   vars:
-    # TODO: choose appropriate linux image
-    kernel_image: linux-image-arm64
-    # TODO: choose appropriate boot shim template
-    edi_boot_shim_template: rpi
+    kernel_image: linux-image-4.14.98-iot-gate-imx8-1.0-06027-g8c54539758f2
+    edi_boot_shim_template: ucm-imx8m-mini
 
   roles:
     - role: repositories
@@ -13,20 +11,20 @@
     - role: bootloader 
       become: True
       become_user: root
-      when: edi_create_distributable_image and (edi_bootstrap_architecture == 'arm64' or edi_bootstrap_architecture == 'armhf')
+      when: edi_create_distributable_image and edi_bootstrap_architecture == 'arm64'
     - role: essential_bare_metal_packages
       become: True
       become_user: root
-      when: edi_create_distributable_image and (edi_bootstrap_architecture == 'arm64' or edi_bootstrap_architecture == 'armhf')
+      when: edi_create_distributable_image and edi_bootstrap_architecture == 'arm64'
     - role: resize_rootfs
       become: True
       become_user: root
-      when: edi_create_distributable_image and (edi_bootstrap_architecture == 'arm64' or edi_bootstrap_architecture == 'armhf')
+      when: edi_create_distributable_image and edi_bootstrap_architecture == 'arm64'
     - role: mender
       become: True
       become_user: root
-      when: edi_create_distributable_image and (edi_bootstrap_architecture == 'arm64' or edi_bootstrap_architecture == 'armhf')
+      when: edi_create_distributable_image and edi_bootstrap_architecture == 'arm64'
     - role: wifi
       become: True
       become_user: root
-      when: edi_create_distributable_image and (edi_bootstrap_architecture == 'arm64' or edi_bootstrap_architecture == 'armhf')
+      when: edi_create_distributable_image and edi_bootstrap_architecture == 'arm64'

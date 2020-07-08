@@ -54,9 +54,7 @@ else
     setenv edi_root_device /dev/mmcblk2p${mender_boot_part}
 fi
 
-setenv edi_uboot_interface ${iface}
-
-if ext4load ${edi_uboot_interface} ${edi_mmc_device} ${secondary_scriptaddr} /boot/boot.scr
+if ext4load ${iface} ${edi_mmc_device} ${secondary_scriptaddr} /boot/boot.scr
 then
     echo "Successfully loaded secondary boot script."
 else
