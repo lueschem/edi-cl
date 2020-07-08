@@ -79,6 +79,8 @@ ssh compulab@IP_ADDRESS
 The password for the user _compulab_ is _compulab_ (just in case you want to
 execute a command using `sudo` or login via a local terminal).
 
+**Important: Do not flash the generated image to the eMMC yet - u-boot is missing!**
+
 ### Creating a Cross Development LXD Container
 
 A cross development container can be created using the
