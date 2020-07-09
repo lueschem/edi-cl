@@ -1,8 +1,10 @@
 - hosts: all
 
   vars:
-    kernel_image: linux-image-4.14.98-iot-gate-imx8-1.0-06027-g8c54539758f2
-    edi_boot_shim_template: ucm-imx8m-mini
+    # Kernel as to be installed from apt install <kernel_image> ie linux-image-arm64. Set in config overlay.
+    kernel_image: ToBeOverwrittenInConfigurationOverlay
+    # Repository is at https://github.com/lueschem/edi-boot-shim/tree/master/template
+    edi_boot_shim_template: ToBeOverwrittenInConfigurationOverlay
 
   roles:
     - role: repositories
@@ -11,20 +13,20 @@
     - role: bootloader 
       become: True
       become_user: root
-      when: edi_create_distributable_image and edi_bootstrap_architecture == 'arm64'
+      when: edi_create_distributable_image and (edi_bootstrap_architecture == 'arm64' or edi_bootstrap_architecture == 'armhf')
     - role: essential_bare_metal_packages
       become: True
       become_user: root
-      when: edi_create_distributable_image and edi_bootstrap_architecture == 'arm64'
+      when: edi_create_distributable_image and (edi_bootstrap_architecture == 'arm64' or edi_bootstrap_architecture == 'armhf')
     - role: resize_rootfs
       become: True
       become_user: root
-      when: edi_create_distributable_image and edi_bootstrap_architecture == 'arm64'
+      when: edi_create_distributable_image and (edi_bootstrap_architecture == 'arm64' or edi_bootstrap_architecture == 'armhf')
     - role: mender
       become: True
       become_user: root
-      when: edi_create_distributable_image and edi_bootstrap_architecture == 'arm64'
+      when: edi_create_distributable_image and (edi_bootstrap_architecture == 'arm64' or edi_bootstrap_architecture == 'armhf')
     - role: wifi
       become: True
       become_user: root
-      when: edi_create_distributable_image and edi_bootstrap_architecture == 'arm64'
+      when: edi_create_distributable_image and (edi_bootstrap_architecture == 'arm64' or edi_bootstrap_architecture == 'armhf')

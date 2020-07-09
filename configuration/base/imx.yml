@@ -9,7 +9,6 @@ general:
 
 bootstrap:
     tool: debootstrap
-    architecture: arm64
     repository: deb http://deb.debian.org/debian/ buster main
     repository_key: https://ftp-master.debian.org/keys/archive-key-10.asc
     additional_packages: ["python3", "sudo", "netbase", "net-tools", "iputils-ping", "ifupdown", "isc-dhcp-client", "resolvconf", "systemd", "systemd-sysv", "gnupg", "dumb-init"]
@@ -37,9 +36,7 @@ playbooks:
         path: playbooks/debian/base_system/main.yml
         parameters:
             create_default_user: True
-            default_user_name: compulab
-            # password is compulab
-            default_user_password: "$6$Q5KPSC2ZJpqbAGRs$scgK3qsHEiJx3UFvixEzGOkkS8wQ1aNti/jTB0etoxx81QWqKMmTABDD.GviPLD4gPhfq4dqYFvOWtOQ5kevn1"
+            default_user_name: imx
             install_openssh_server: True
             disable_ssh_password_authentication: True
             install_documentation: {% if edi_create_distributable_image %}changelog{% else %}full{% endif %}
@@ -55,7 +52,7 @@ playbooks:
     900_base_system_cleanup:
         path: playbooks/debian/base_system_cleanup/main.yml
         parameters:
-            hostname: iot-gate-imx8
+            hostname: edi-imx
             document_build_setup: true
             document_installed_packages: true
 
