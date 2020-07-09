@@ -5,16 +5,20 @@ lxc_profiles:
     300_suppress_init:
         skip: True
 
-shared_folders:
-    edi_workspace:
-        folder: edi-workspace
-        mountpoint: edi-workspace
-
 playbooks:
+    100_base_system:
+        parameters:
+            default_user_name: compulab
+            # password is compulab
+            default_user_password: "$6$Q5KPSC2ZJpqbAGRs$scgK3qsHEiJx3UFvixEzGOkkS8wQ1aNti/jTB0etoxx81QWqKMmTABDD.GviPLD4gPhfq4dqYFvOWtOQ5kevn1"
     400_development_tools:
         parameters:
             install_development_tools: True
             install_cross_development_tools: True
+            cross_architecture: arm64
+    900_base_system_cleanup:
+        parameters:
+            hostname: iot-gate-imx8
 
 postprocessing_commands:
     050_timestamp:
@@ -29,3 +33,8 @@ postprocessing_commands:
         skip: True
     500_documentation:
         skip: True
+
+shared_folders:
+    edi_workspace:
+        folder: edi-workspace
+        mountpoint: edi-workspace

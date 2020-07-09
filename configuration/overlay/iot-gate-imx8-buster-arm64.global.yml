@@ -1,3 +1,16 @@
+bootstrap:
+    architecture: arm64
+
+playbooks:
+    100_base_system:
+        parameters:
+            default_user_name: compulab
+            # password is compulab
+            default_user_password: "$6$Q5KPSC2ZJpqbAGRs$scgK3qsHEiJx3UFvixEzGOkkS8wQ1aNti/jTB0etoxx81QWqKMmTABDD.GviPLD4gPhfq4dqYFvOWtOQ5kevn1"
+    900_base_system_cleanup:
+        parameters:
+            hostname: iot-gate-imx8
+
 shared_folders:
     edi_workspace:
         folder: edi-workspace
