@@ -60,7 +60,7 @@ sudo bmaptool copy artifacts/iot-gate-imx8-buster-arm64.img /dev/sda
 
 If the command fails, unmount the USB stick and repeat the above command.
 
-Once you have booted the device using this USB stic you can
+Once you have booted the device using this USB stick you can
 access it using ssh (the access should be granted thanks to to your
 ssh keys):
 
