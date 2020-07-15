@@ -45,8 +45,8 @@ playbooks:
         path: playbooks/debian/development_user_facilities/main.yml
         parameters:
             export_display: {{ not edi_create_distributable_image }}
-    300_base:
-        path: playbooks/base/main.yml
+    300_board_support:
+        path: playbooks/board_support/main.yml
     400_development_tools:
         path: playbooks/development_tools/main.yml
     900_base_system_cleanup:
