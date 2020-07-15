@@ -9,8 +9,8 @@ playbooks:
             default_user_password: "$6$Q5KPSC2ZJpqbAGRs$scgK3qsHEiJx3UFvixEzGOkkS8wQ1aNti/jTB0etoxx81QWqKMmTABDD.GviPLD4gPhfq4dqYFvOWtOQ5kevn1"
     300_base:
         parameters:
-            edi_boot_shim_template: ucm-imx8m-mini
-            edi_mender_type: iot-gate-imx8
+            boot_shim_template: ucm-imx8m-mini
+            mender_device_type: iot-gate-imx8
             kernel_image: linux-image-4.14.98-iot-gate-imx8-1.0-06027-g8c54539758f2
     900_base_system_cleanup:
         parameters:
@@ -19,7 +19,7 @@ playbooks:
 postprocessing_commands:
     400_mender:
         parameters:
-            edi_mender_type: iot-gate-imx8
+            mender_device_type: iot-gate-imx8
 
 shared_folders:
     edi_workspace:
