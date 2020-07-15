@@ -11,10 +11,6 @@ playbooks:
             default_user_name: compulab
             # password is compulab
             default_user_password: "$6$Q5KPSC2ZJpqbAGRs$scgK3qsHEiJx3UFvixEzGOkkS8wQ1aNti/jTB0etoxx81QWqKMmTABDD.GviPLD4gPhfq4dqYFvOWtOQ5kevn1"
-    300_base:
-        parameters:
-            mender_device_type: iot-gate-imx8
-            kernel_image: linux-image-4.14.98-iot-gate-imx8-1.0-06027-g8c54539758f2
     400_development_tools:
         parameters:
             install_development_tools: True
@@ -34,8 +30,6 @@ postprocessing_commands:
     300_blockmap:
         skip: True
     400_mender:
-        parameters:
-            mender_device_type: iot-gate-imx8
         skip: True
     500_documentation:
         skip: True
