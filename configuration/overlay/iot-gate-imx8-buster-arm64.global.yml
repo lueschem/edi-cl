@@ -7,7 +7,7 @@ playbooks:
             default_user_name: compulab
             # password is compulab
             default_user_password: "$6$Q5KPSC2ZJpqbAGRs$scgK3qsHEiJx3UFvixEzGOkkS8wQ1aNti/jTB0etoxx81QWqKMmTABDD.GviPLD4gPhfq4dqYFvOWtOQ5kevn1"
-    300_imx_base:
+    300_base:
         parameters:
             edi_boot_shim_template: ucm-imx8m-mini
             edi_mender_type: iot-gate-imx8
