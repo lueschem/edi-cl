@@ -4,13 +4,14 @@
     # Kernel as to be installed from apt install <kernel_image> ie linux-image-arm64. Set in config overlay.
     kernel_image: ToBeOverwrittenInConfigurationOverlay
     # Repository is at https://github.com/lueschem/edi-boot-shim/tree/master/template
-    edi_boot_shim_template: ToBeOverwrittenInConfigurationOverlay
+    boot_shim_template: ToBeOverwrittenInConfigurationOverlay
+    mender_device_type: ToBeOverwrittenInConfigurationOverlay
 
   roles:
     - role: repositories
       become: True
       become_user: root
-    - role: bootloader 
+    - role: bootloader
       become: True
       become_user: root
       when: edi_create_distributable_image and (edi_bootstrap_architecture == 'arm64' or edi_bootstrap_architecture == 'armhf')

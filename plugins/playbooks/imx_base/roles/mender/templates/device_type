@@ -1,1 +1,0 @@
-device_type=iot-gate-imx8-{{ edi_bootstrap_architecture }}
