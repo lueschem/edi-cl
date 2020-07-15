@@ -5,6 +5,7 @@
     kernel_image: ToBeOverwrittenInConfigurationOverlay
     # Repository is at https://github.com/lueschem/edi-boot-shim/tree/master/template
     boot_shim_template: ToBeOverwrittenInConfigurationOverlay
+    mender_device_type: ToBeOverwrittenInConfigurationOverlay
 
   roles:
     - role: repositories
