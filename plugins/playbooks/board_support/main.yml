@@ -4,7 +4,7 @@
     # Kernel as to be installed from apt install <kernel_image> ie linux-image-arm64. Set in config overlay.
     kernel_image: ToBeOverwrittenInConfigurationOverlay
     # Repository is at https://github.com/lueschem/edi-boot-shim/tree/master/template
-    boot_shim_template: ToBeOverwrittenInConfigurationOverlay
+    ebs_template: ToBeOverwrittenInConfigurationOverlay
     mender_device_type: ToBeOverwrittenInConfigurationOverlay
 
   roles:
