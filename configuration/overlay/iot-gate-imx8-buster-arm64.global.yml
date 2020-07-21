@@ -15,6 +15,8 @@ playbooks:
         parameters:
             ebs_template: ucm-imx8m-mini
             kernel_image: linux-image-4.14.98-iot-gate-imx8-1.0-06027-g8c54539758f2
+            uboot_device_offset: '0x400000'
+            uboot_env_size: '0x1000'
     900_base_system_cleanup:
         parameters:
             hostname: iot-gate-imx8
