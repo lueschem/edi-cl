@@ -79,6 +79,8 @@ fi
 ROOT_DEV=""
 case "${ROOT_PART}" in
     mmcblk0*) ROOT_DEV=mmcblk0 ;;
+    mmcblk1*) ROOT_DEV=mmcblk1 ;;
+    mmcblk2*) ROOT_DEV=mmcblk2 ;;
     sda*)     ROOT_DEV=sda ;;
 esac
 
