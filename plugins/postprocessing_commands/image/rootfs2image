@@ -155,7 +155,7 @@ ROOTFS_SIZE_KB=$(expr `du -s "${ROOTFS_DIR}" | awk '{ print $1 }'`)
 echo "Source rootfs is ${ROOTFS_SIZE_KB}KB big."
 
 # Calculate the amount of needed 512 byte sectors:
-TABLE_SIZE_M=1
+TABLE_SIZE_M=8
 FIRMWARE_PARTITION_SIZE_M=128
 DATA_PARTITION_SIZE_M=256
 
@@ -182,7 +182,7 @@ dd if=/dev/zero of="${DEVICE_IMAGE}" bs=512 count=${IMAGE_SECTORS}
 
 # Write partition table
 sfdisk -q "${DEVICE_IMAGE}" <<EOM
-${TABLE_SECTORS},${FIRMWARE_SECTORS},c,*
+${TABLE_SECTORS},${FIRMWARE_SECTORS},83,*
 ${DATA_OFFSET_SECTOR},${DATA_SECTORS},83
 ${ROOT_OFFSET_SECTOR},${ROOT_SECTORS},83
 EOM
