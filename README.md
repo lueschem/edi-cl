@@ -4,7 +4,7 @@
 
 **==================================**
 
-# edi-imx
+# edi Project Configuration for Compulab Devices
 
 Debian tool chain and image generation for the Compulab iot-gate-imx8.
 
@@ -28,8 +28,8 @@ make sure that you have a backup copy of your data.
 
 ### Preparation
 
-Prior to using edi-imx you have to install [edi](https://www.get-edi.io)
-according to
+Prior to using this edi project configuration you have to install
+[edi](https://www.get-edi.io) according to
 [this instructions](https://docs.get-edi.io/en/latest/getting_started.html).
 Please take a careful look at the "Setting up ssh Keys" section since you
 will need a proper ssh key setup in order to access the container or

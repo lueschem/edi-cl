@@ -52,7 +52,7 @@ playbooks:
     900_base_system_cleanup:
         path: playbooks/debian/base_system_cleanup/main.yml
         parameters:
-            hostname: edi-imx
+            hostname: edi-cl
             document_build_setup: true
             document_installed_packages: true
 
@@ -87,7 +87,7 @@ postprocessing_commands:
         output:
             pp_documentation: {{ edi_configuration_name }}_documentation
         parameters:
-            author: The edi-imx Project Team
+            author: The edi-cl Project Team
 
 documentation_steps:
     100_index:
