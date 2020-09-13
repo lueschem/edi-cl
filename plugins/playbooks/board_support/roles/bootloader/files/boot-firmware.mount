@@ -1,0 +1,8 @@
+[Unit]
+Documentation=https://www.get-edi.io
+Before=local-fs.target
+
+[Mount]
+Where=/boot/firmware
+What=${boot_device}
+Type=ext4

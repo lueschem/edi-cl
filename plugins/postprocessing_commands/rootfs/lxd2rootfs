@@ -141,8 +141,6 @@ find "${LXD_ROOTFS}/tmp/" -mindepth 1 -delete
 rm -f "${LXD_ROOTFS}/usr/bin/qemu-"*"-static"
 # Remove /etc/machine-id (it should be unique for each system).
 rm "${LXD_ROOTFS}/etc/machine-id"
-# Add fstab.
-cp "${SCRIPTDIR}/fstab" "${LXD_ROOTFS}/etc/"
 
 # Add artifact information to rootfs.
 mkdir -p "${LXD_ROOTFS}/etc/mender/"

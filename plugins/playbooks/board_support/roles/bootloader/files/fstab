@@ -1,0 +1,3 @@
+# <file system> <mount point> <type> <options> <dump> <pass>
+/dev/root / ext4 rw 0 1
+# Note: /data and /boot/firmware are dynamically mounted through systemd mount units.

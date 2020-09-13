@@ -56,3 +56,17 @@
     src: "/data/u-boot/fw_env.config"
     dest: "/etc/fw_env.config"
     state: link
+
+- name: Copy fstab.
+  copy:
+    src: fstab
+    dest: /etc/
+
+- name: Copy data and boot/firmware mount units.
+  copy:
+    src: "{{ item }}"
+    dest: /lib/systemd/system/
+  loop:
+    - data.mount
+    - boot-firmware.mount
+

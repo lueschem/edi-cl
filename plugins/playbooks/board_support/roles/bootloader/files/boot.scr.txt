@@ -49,8 +49,12 @@ setenv edi_mmc_device ${dev}:${mender_boot_part_hex}
 
 if test "${iface}" == "usb"
 then
+    setenv edi_boot_device /dev/sda1
+    setenv edi_data_device /dev/sda2
     setenv edi_root_device /dev/sda${mender_boot_part}
 else
+    setenv edi_boot_device /dev/mmcblk2p1
+    setenv edi_data_device /dev/mmcblk2p2
     setenv edi_root_device /dev/mmcblk2p${mender_boot_part}
 fi
 
