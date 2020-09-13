@@ -7,3 +7,5 @@ Where=/data
 What=${data_device}
 Type=ext4
 
+[Install]
+RequiredBy=local-fs.target
