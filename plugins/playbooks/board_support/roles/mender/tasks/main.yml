@@ -11,10 +11,13 @@
     - "{{ mender_config_directory }}/mender_custom.yml"
     - "{{ mender_config_directory }}/mender.yml"
 
-- name: Write mender main configuration.
+- name: Write mender main configurations.
   template:
     src: mender.conf
-    dest: /etc/mender/
+    dest: /etc/mender/mender.conf.{{ item.device }}
+  loop:
+    - { device: 'mmcblk2', partition_prefix: 'p' }
+    - { device: 'sda', partition_prefix: '' }
 
 - name: Create mender directory on data partition.
   file:
