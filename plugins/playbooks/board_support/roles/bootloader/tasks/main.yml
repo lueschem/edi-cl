@@ -2,9 +2,6 @@
 - name: Ensure a EBS template is set.
   assert: { that: "ebs_template is defined" }
 
-- name: Ensure a uboot offset and environment size is set.
-  assert: { that: "uboot_device_offset is defined and uboot_env_size is defined" }
-
 - name: Ensures edi-boot-shim config.d directory exists.
   file:
     path: /etc/edi-boot-shim/edi-boot-shim.cfg.d
@@ -41,13 +38,8 @@
     path: /data/u-boot
     state: directory
 
-- name: Ensure flash sector size is defined.
-  set_fact:
-    uboot_flash_sector_size: uboot_env_size
-  when: uboot_flash_sector_size is not defined
-
 - name: Configure u-boot-tools.
-  template:
+  copy:
     src: fw_env.config
     dest: /data/u-boot
 

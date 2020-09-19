@@ -1,3 +1,2 @@
 ---
-uboot_env_size: '0x1000'
 uboot_location: /boot/firmware
