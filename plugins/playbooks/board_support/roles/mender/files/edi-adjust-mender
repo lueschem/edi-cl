@@ -1,0 +1,97 @@
+#!/bin/bash
+
+# Copyright (C) 2020 Matthias Luescher
+#
+# Authors:
+#  Matthias Luescher
+#
+# This file is part of the edi project configuration.
+#
+# This script is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Lesser General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This script is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public License
+# along with the edi project configuration.  If not, see <http://www.gnu.org/licenses/>.
+
+# ----------------------------------------------------------------------------
+# adjusts the mender configuration according to the boot device
+# ----------------------------------------------------------------------------
+
+set -o nounset
+set -o errexit
+set -o pipefail
+
+print_and_exit()
+{
+    local TYPE=$1
+    local MESSAGE=$2
+    trap - EXIT
+    if [ "${TYPE}" == "ERROR" ] ; then
+        >&2 echo "error: ${MESSAGE}"
+        exit 1
+    else
+        echo "${MESSAGE}"
+        exit 0
+    fi
+}
+
+abnormal_termination()
+{
+    print_and_exit "ERROR" "failed to adjust the mender configuration due to abnormal script termination"
+}
+
+trap "abnormal_termination" EXIT
+
+if systemd-detect-virt --container > /dev/null ; then
+    print_and_exit "INFO" "detected container virtualization - not going to adjust the mender configuration"
+fi
+
+if [[ $EUID -ne 0 ]]; then
+   print_and_exit "ERROR" "use root user to execute this script"
+fi
+
+ROOT_PART=$(mount | sed -n 's|^/dev/\(.*\) on / .*|\1|p')
+if [ -z "${ROOT_PART}" ] ; then
+    print_and_exit "ERROR" "unable to detect root partition device"
+fi
+
+ROOT_DEV=""
+case "${ROOT_PART}" in
+    mmcblk0*) ROOT_DEV=mmcblk0 ;;
+    mmcblk1*) ROOT_DEV=mmcblk1 ;;
+    mmcblk2*) ROOT_DEV=mmcblk2 ;;
+    sda*)     ROOT_DEV=sda ;;
+esac
+
+if [ -z "${ROOT_DEV}" ] ; then
+    print_and_exit "ERROR" "${ROOT_PART} does not look like a valid root partition device"
+fi
+
+if [ "${ROOT_DEV}" = "${ROOT_PART}" ] ; then
+    print_and_exit "ERROR" "${ROOT_PART} does not look like a partition"
+fi
+
+SYMLINK_SOURCE="/etc/mender/mender.conf"
+SYMLINK_TARGET="/etc/mender/mender.conf.${ROOT_DEV}"
+
+if [ ! -f "${SYMLINK_TARGET}" ] ; then
+    print_and_exit "ERROR" "the desired configuration file ${SYMLINK_TARGET} is missing"
+fi
+
+if [[ -L "${SYMLINK_SOURCE}" ]] && [[ "$(readlink -f ${SYMLINK_SOURCE})" == "${SYMLINK_TARGET}" ]] ; then
+    # no need to change anything
+    trap - EXIT
+    exit 0
+fi
+
+ln -sf "${SYMLINK_TARGET}" "${SYMLINK_SOURCE}"
+
+print_and_exit "INFO" "mender configuration successfully changed (${SYMLINK_SOURCE}->${SYMLINK_TARGET})"
+

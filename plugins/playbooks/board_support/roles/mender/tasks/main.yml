@@ -19,6 +19,19 @@
     - { device: 'mmcblk2', partition_prefix: 'p' }
     - { device: 'sda', partition_prefix: '' }
 
+- name: Copy the script that adjusts the mender configuration.
+  copy:
+    src: edi-adjust-mender
+    dest: /usr/bin/
+    mode: 0755
+    owner: root
+    group: root
+
+- name: Add a systemd service that triggers the adjustment of the mender configuration.
+  copy:
+    src: edi-adjust-mender.service
+    dest: /lib/systemd/system/
+
 - name: Create mender directory on data partition.
   file:
     path: /data/mender
