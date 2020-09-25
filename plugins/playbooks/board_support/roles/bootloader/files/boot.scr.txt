@@ -47,7 +47,7 @@ setexpr secondary_scriptaddr ${loadaddr}
 
 setenv edi_mmc_device ${dev}:${mender_boot_part_hex}
 
-if test "${iface}" == "usb"
+if test "${iface}" = "usb"
 then
     setenv edi_boot_device /dev/sda1
     setenv edi_data_device /dev/sda2
