@@ -155,7 +155,7 @@ ROOTFS_SIZE_KB=$(expr `du -s "${ROOTFS_DIR}" | awk '{ print $1 }'`)
 echo "Source rootfs is ${ROOTFS_SIZE_KB}KB big."
 
 # Calculate the amount of needed 512 byte sectors:
-TABLE_SIZE_M=8
+TABLE_SIZE_M=1
 FIRMWARE_PARTITION_SIZE_M=128
 DATA_PARTITION_SIZE_M=256
 
