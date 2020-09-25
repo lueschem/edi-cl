@@ -1,9 +1,3 @@
-**==================================**
-
-**Work in progress - do not use yet!**
-
-**==================================**
-
 # edi Project Configuration for Compulab Devices
 
 Debian tool chain and image generation for the Compulab iot-gate-imx8.
@@ -14,7 +8,7 @@ The edi configuration contained in this repository can be used to
 generate the following artifacts:
 
 * A Debian buster arm64 (64bit) image suitable for the Compulab iot-gate-imx8.
-* A matching Mender update artifacts for the above configuration.
+* A matching Mender update artifact for the above configuration.
 * An amd64/arm64 based LXD container with a pre-installed
 cross development toolchain for C and C++.
 
@@ -60,6 +54,10 @@ sudo bmaptool copy artifacts/iot-gate-imx8-buster-arm64.img /dev/sda
 
 If the command fails, unmount the USB stick and repeat the above command.
 
+**Warning: The image requires u-boot version 2.0 or above!** Please follow the
+[Compulab instructions](https://mediawiki.compulab.com/w/index.php?title=IOT-GATE-iMX8_and_SBC-IOT-iMX8:_U-Boot:_Update)
+to upgrade the bootloader of your device.
+
 Once you have booted the device using this USB stick you can
 access it using ssh (the access should be granted thanks to to your
 ssh keys):
@@ -70,8 +68,6 @@ ssh compulab@IP_ADDRESS
 
 The password for the user _compulab_ is _compulab_ (just in case you want to
 execute a command using `sudo` or login via a local terminal).
-
-**Important: Do not flash the generated image to the eMMC yet - u-boot is missing!**
 
 ### Creating a Cross Development LXD Container
 
