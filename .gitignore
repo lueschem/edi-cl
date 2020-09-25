@@ -6,4 +6,3 @@ main.retry
 # pycharm files
 .idea/*
 /configuration/mender/mender_custom.yml
-/configuration/wifi/wifi_custom.yml

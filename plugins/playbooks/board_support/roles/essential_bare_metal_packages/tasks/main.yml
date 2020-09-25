@@ -5,4 +5,10 @@
     state: present
     install_recommends: no
 
+- name: Install the firmware for the AX200 (iwlwifi) from buster-backports.
+  apt:
+    name: firmware-iwlwifi
+    state: present
+    default_release: buster-backports
+    install_recommends: no
 
