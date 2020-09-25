@@ -62,3 +62,9 @@
     - data.mount
     - boot-firmware.mount
 
+- name: Add helper script that unlocks the boot partition for fw_setenv.
+  copy:
+    src: fw_setenv
+    dest: /usr/sbin/
+    mode: 0755
+

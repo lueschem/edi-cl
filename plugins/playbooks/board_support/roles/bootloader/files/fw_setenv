@@ -1,0 +1,25 @@
+#!/bin/bash
+# This script calls fw_setenv with the boot partition unlocked.
+
+set -o nounset
+set -o errexit
+set -o pipefail
+
+restore_lock()
+{
+    echo ${LOCK_VALUE} > ${LOCK_FILE}
+}
+
+if [[ ${EUID} -ne 0 ]]; then
+    echo "Error: This script must be run as root."
+    exit 1
+fi
+
+LOCK_FILE=/sys/block/mmcblk2boot0/force_ro
+LOCK_VALUE=$(cat ${LOCK_FILE})
+
+trap restore_lock EXIT
+
+echo 0 > ${LOCK_FILE}
+
+/usr/bin/fw_setenv $@
