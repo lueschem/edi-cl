@@ -1,6 +1,7 @@
 # edi Project Configuration for Compulab Devices
 
-Debian tool chain and image generation for the Compulab iot-gate-imx8.
+This [edi](https://www.get-edi.io) project configuration currently supports the
+[Compulab iot-gate-imx8]((https://www.compulab.com/products/iot-gateways/iot-gate-imx8-industrial-arm-iot-gateway/)).
 
 ## Introduction
 
@@ -52,15 +53,15 @@ using the following command
 sudo bmaptool copy artifacts/iot-gate-imx8-buster-arm64.img /dev/sda
 ```
 
-If the command fails, unmount the USB stick and repeat the above command.
+If the command fails, unmount the USB stick (`sudo umount /dev/sda?`) and repeat the above command.
 
 **Warning: The image requires u-boot version 2.0 or above!** Please follow the
 [Compulab instructions](https://mediawiki.compulab.com/w/index.php?title=IOT-GATE-iMX8_and_SBC-IOT-iMX8:_U-Boot:_Update)
-to upgrade the bootloader of your device.
+in case you need to upgrade the bootloader of your device.
 
-Once you have booted the device using this USB stick you can
-access it using ssh (the access should be granted thanks to to your
-ssh keys):
+Once you have booted the device using the above USB stick (plugged into the USB port
+next to the power button) you can access it using ssh (the access should be granted
+thanks to to your ssh keys):
 
 ``` bash
 ssh compulab@IP_ADDRESS
@@ -68,6 +69,40 @@ ssh compulab@IP_ADDRESS
 
 The password for the user _compulab_ is _compulab_ (just in case you want to
 execute a command using `sudo` or login via a local terminal).
+
+### Flashing the Image to the eMMC
+
+The same image that has been used for the USB stick can also be flashed to the builtin eMMC as follows:
+
+Copy the image to the device that has been booted from the USB stick:
+
+``` bash
+scp artifacts/iot-gate-imx8-buster-arm64.img compulab@IP_ADDRESS:
+```
+
+Access the device:
+
+``` bash
+ssh compulab@IP_ADDRESS
+```
+
+Flash the image to the eMMC (**Everything on mmcblk2 will be erased!**):
+
+``` bash
+sudo dd if=iot-gate-imx8-buster-arm64.img of=/dev/mmcblk2 bs=1M
+```
+
+Now you can remove the power supply and the USB stick from the device.
+When powering up the device again, it should boot the new image from the eMMC storage device.
+
+### Connecting to Mender
+
+To enable over the air (OTA) updates, the generated images are configured
+to connect to [https://hosted.mender.io/](https://hosted.mender.io/).
+In order to connect to your Mender tenant you have to provide your tenant token prior to building the images.
+The tenant token can be added to `configuration/mender/mender.yml`. If you do not want to
+add the tenant token to the version control system you can also copy `configuration/mender/mender.yml` to
+`configuration/mender/mender_custom.yml` and add the tenant token there.
 
 ### Creating a Cross Development LXD Container
 
@@ -120,7 +155,10 @@ make latexpdf
 
 ### More Information
 
-For more information please read the [edi documentation](https://docs.get-edi.io) and
+For more information about the Compulab device please take a look at the
+[official documentation](https://www.compulab.com/products/iot-gateways/iot-gate-imx8-industrial-arm-iot-gateway/).
+
+For more information about this setup please read the [edi documentation](https://docs.get-edi.io) and
 [this blog post](https://www.get-edi.io/A-new-Approach-to-Operating-System-Image-Generation/).
 
 For details about the Mender based robust update integration please refer to this
