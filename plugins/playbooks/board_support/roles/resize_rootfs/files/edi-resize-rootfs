@@ -79,13 +79,13 @@ fi
 ROOT_DEV=""
 ROOT_DEV_PARTITION_PREFIX="p"
 case "${ROOT_PART}" in
-    mmcblk0*)
+    mmcblk0p*)
         ROOT_DEV=mmcblk0
         ;;
-    mmcblk1*)
+    mmcblk1p*)
         ROOT_DEV=mmcblk1
         ;;
-    mmcblk2*)
+    mmcblk2p*)
         ROOT_DEV=mmcblk2
         ;;
     sda*)
