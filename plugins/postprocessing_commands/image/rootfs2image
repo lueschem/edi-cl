@@ -151,7 +151,7 @@ DATA_MNT="unused"
 
 trap "unexpected_exit ${TEMPDIR}" EXIT
 
-ROOTFS_SIZE_KB=$(expr `du -s "${ROOTFS_DIR}" | awk '{ print $1 }'`)
+ROOTFS_SIZE_KB=$(du -s "${ROOTFS_DIR}" | awk '{ print $1 }')
 echo "Source rootfs is ${ROOTFS_SIZE_KB}KB big."
 
 # Calculate the amount of needed 512 byte sectors:
@@ -159,23 +159,23 @@ TABLE_SIZE_M=1
 FIRMWARE_PARTITION_SIZE_M=128
 DATA_PARTITION_SIZE_M=256
 
-LOSETUP_DATA_OFFSET_M=$(expr ${TABLE_SIZE_M} + ${FIRMWARE_PARTITION_SIZE_M})
-LOSETUP_ROOT_OFFSET_M=$(expr ${TABLE_SIZE_M} + ${FIRMWARE_PARTITION_SIZE_M} + ${DATA_PARTITION_SIZE_M})
+LOSETUP_DATA_OFFSET_M=$(( ${TABLE_SIZE_M} + ${FIRMWARE_PARTITION_SIZE_M} ))
+LOSETUP_ROOT_OFFSET_M=$(( ${TABLE_SIZE_M} + ${FIRMWARE_PARTITION_SIZE_M} + ${DATA_PARTITION_SIZE_M} ))
 
-TABLE_SECTORS=$(expr ${TABLE_SIZE_M} \* 1024 \* 1024 \/ 512)
-FIRMWARE_SECTORS=$(expr ${FIRMWARE_PARTITION_SIZE_M} \* 1024 \* 1024 \/ 512)
-DATA_SECTORS=$(expr ${DATA_PARTITION_SIZE_M} \* 1024 \* 1024 \/ 512)
+TABLE_SECTORS=$(( ${TABLE_SIZE_M} * 1024 * 1024 / 512 ))
+FIRMWARE_SECTORS=$(( ${FIRMWARE_PARTITION_SIZE_M} * 1024 * 1024 / 512 ))
+DATA_SECTORS=$(( ${DATA_PARTITION_SIZE_M} * 1024 * 1024 / 512 ))
 
-DATA_OFFSET_SECTOR=$(expr ${TABLE_SECTORS} + ${FIRMWARE_SECTORS})
-ROOT_OFFSET_SECTOR=$(expr ${TABLE_SECTORS} + ${FIRMWARE_SECTORS} + ${DATA_SECTORS})
+DATA_OFFSET_SECTOR=$(( ${TABLE_SECTORS} + ${FIRMWARE_SECTORS} ))
+ROOT_OFFSET_SECTOR=$(( ${TABLE_SECTORS} + ${FIRMWARE_SECTORS} + ${DATA_SECTORS} ))
 
 # The root partition is ext4.
 # This means more space than the actual used space of the chroot is used.
 # As overhead for journaling and reserved blocks 25% are added.
-ROOT_SECTORS=$(expr $(expr ${ROOTFS_SIZE_KB} + ${ROOTFS_SIZE_KB} \/ 100 \* 25) \* 1024 \/ 512)
+ROOT_SECTORS=$(( ( ${ROOTFS_SIZE_KB} + ${ROOTFS_SIZE_KB} / 100 * 25 ) * 1024 / 512 ))
 
 # Calculate required image size in 512 Byte sectors:
-IMAGE_SECTORS=$(expr ${TABLE_SECTORS} + ${FIRMWARE_SECTORS} + ${DATA_SECTORS} + ${ROOT_SECTORS})
+IMAGE_SECTORS=$(( ${TABLE_SECTORS} + ${FIRMWARE_SECTORS} + ${DATA_SECTORS} + ${ROOT_SECTORS} ))
 
 # Prepare the image file.
 dd if=/dev/zero of="${DEVICE_IMAGE}" bs=512 count=${IMAGE_SECTORS}
