@@ -151,11 +151,16 @@ DATA_MNT="unused"
 
 trap "unexpected_exit ${TEMPDIR}" EXIT
 
-ROOTFS_SIZE_KB=$(du -s "${ROOTFS_DIR}" | awk '{ print $1 }')
-echo "Source rootfs is ${ROOTFS_SIZE_KB}KB big."
+ROOTFS_SIZE_RAW_M=$(( $(du -s "${ROOTFS_DIR}" | awk '{ print $1 }') / 1024 + 1 ))
+# The root partition is ext4.
+# This means more space than the actual used space of the chroot is used.
+# As overhead for journaling and reserved blocks 25% are added.
+ROOTFS_SIZE_M=$(( ${ROOTFS_SIZE_RAW_M} + ${ROOTFS_SIZE_RAW_M} * 25 / 100 ))
+echo "${ROOTFS_SIZE_M}MiB gets allocated for the root file system."
 
 # Calculate the amount of needed 512 byte sectors:
 TABLE_SIZE_M=1
+BACKUP_TABLE_SIZE_M=1
 FIRMWARE_PARTITION_SIZE_M=128
 DATA_PARTITION_SIZE_M=256
 
@@ -163,35 +168,33 @@ LOSETUP_DATA_OFFSET_M=$(( ${TABLE_SIZE_M} + ${FIRMWARE_PARTITION_SIZE_M} ))
 LOSETUP_ROOT_OFFSET_M=$(( ${TABLE_SIZE_M} + ${FIRMWARE_PARTITION_SIZE_M} + ${DATA_PARTITION_SIZE_M} ))
 
 TABLE_SECTORS=$(( ${TABLE_SIZE_M} * 1024 * 1024 / 512 ))
+BACKUP_TABLE_SECTORS=$(( ${BACKUP_TABLE_SIZE_M} * 1024 * 1024 / 512 ))
 FIRMWARE_SECTORS=$(( ${FIRMWARE_PARTITION_SIZE_M} * 1024 * 1024 / 512 ))
 DATA_SECTORS=$(( ${DATA_PARTITION_SIZE_M} * 1024 * 1024 / 512 ))
 
 DATA_OFFSET_SECTOR=$(( ${TABLE_SECTORS} + ${FIRMWARE_SECTORS} ))
 ROOT_OFFSET_SECTOR=$(( ${TABLE_SECTORS} + ${FIRMWARE_SECTORS} + ${DATA_SECTORS} ))
 
-# The root partition is ext4.
-# This means more space than the actual used space of the chroot is used.
-# As overhead for journaling and reserved blocks 25% are added.
-ROOT_SECTORS=$(( ( ${ROOTFS_SIZE_KB} + ${ROOTFS_SIZE_KB} / 100 * 25 ) * 1024 / 512 ))
+ROOT_SECTORS=$(( ${ROOTFS_SIZE_M} * 1024 * 1024 / 512 ))
 
 # Calculate required image size in 512 Byte sectors:
-IMAGE_SECTORS=$(( ${TABLE_SECTORS} + ${FIRMWARE_SECTORS} + ${DATA_SECTORS} + ${ROOT_SECTORS} ))
+IMAGE_SECTORS=$(( ${TABLE_SECTORS} + ${FIRMWARE_SECTORS} + ${DATA_SECTORS} + ${ROOT_SECTORS} + ${BACKUP_TABLE_SECTORS} ))
 
 # Prepare the image file.
 dd if=/dev/zero of="${DEVICE_IMAGE}" bs=512 count=${IMAGE_SECTORS}
 
 # Write partition table
-sfdisk -q "${DEVICE_IMAGE}" <<EOM
-${TABLE_SECTORS},${FIRMWARE_SECTORS},83,*
-${DATA_OFFSET_SECTOR},${DATA_SECTORS},83
-${ROOT_OFFSET_SECTOR},${ROOT_SECTORS},83
+sfdisk --label gpt -q "${DEVICE_IMAGE}" <<EOM
+${TABLE_SECTORS},${FIRMWARE_SECTORS},0FC63DAF-8483-4772-8E79-3D69D8477DE4
+${DATA_OFFSET_SECTOR},${DATA_SECTORS},0FC63DAF-8483-4772-8E79-3D69D8477DE4
+${ROOT_OFFSET_SECTOR},${ROOT_SECTORS},B921B045-1DF0-41C3-AF44-4C6F280D3FAE
 EOM
 
 # Setup temporary loop devices:
 echo "Setting up loop devices."
 FIRMWARE_LD="$(losetup -o ${TABLE_SIZE_M}M --sizelimit ${FIRMWARE_PARTITION_SIZE_M}M -f --show ${DEVICE_IMAGE})"
 DATA_LD="$(losetup -o ${LOSETUP_DATA_OFFSET_M}M --sizelimit ${DATA_PARTITION_SIZE_M}M -f --show ${DEVICE_IMAGE})"
-ROOT_LD="$(losetup -o ${LOSETUP_ROOT_OFFSET_M}M -f --show ${DEVICE_IMAGE})"
+ROOT_LD="$(losetup -o ${LOSETUP_ROOT_OFFSET_M}M --sizelimit ${ROOTFS_SIZE_M}M -f --show ${DEVICE_IMAGE})"
 
 # Build filesystems
 mkfs.ext4 "${FIRMWARE_LD}"
