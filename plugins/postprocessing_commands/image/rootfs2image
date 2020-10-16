@@ -203,7 +203,7 @@ mkfs.ext4 "${ROOT_LD}"
 
 e2label "${FIRMWARE_LD}" boot
 e2label "${DATA_LD}" data
-e2label "${ROOT_LD}" primary
+e2label "${ROOT_LD}" rootfs
 
 # Mount the temporary loop devices
 ROOT_MNT="${TEMPDIR}/loop_mnt"
