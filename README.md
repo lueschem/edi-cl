@@ -166,3 +166,5 @@ For details about the Mender based robust update integration please refer to thi
 
 If you are curious about the U-Boot bootloader setup please take a look at this
 [blog post](https://www.get-edi.io/Booting-Debian-with-U-Boot/).
+
+For the kernel build instructions please check the [docs folder of this project](docs/kernel_build.md).
