@@ -6,11 +6,6 @@ bootstrap:
     architecture: arm64
 
 playbooks:
-    100_base_system:
-        parameters:
-            default_user_name: compulab
-            # password is compulab
-            default_user_password: "$6$Q5KPSC2ZJpqbAGRs$scgK3qsHEiJx3UFvixEzGOkkS8wQ1aNti/jTB0etoxx81QWqKMmTABDD.GviPLD4gPhfq4dqYFvOWtOQ5kevn1"
     300_board_support:
         parameters:
             ebs_template: ucm-imx8m-mini

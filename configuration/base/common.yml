@@ -36,7 +36,9 @@ playbooks:
         path: playbooks/debian/base_system/main.yml
         parameters:
             create_default_user: True
-            default_user_name: imx
+            default_user_name: compulab
+            # password is compulab
+            default_user_password: "$6$Q5KPSC2ZJpqbAGRs$scgK3qsHEiJx3UFvixEzGOkkS8wQ1aNti/jTB0etoxx81QWqKMmTABDD.GviPLD4gPhfq4dqYFvOWtOQ5kevn1"
             install_openssh_server: True
             disable_ssh_password_authentication: True
             install_documentation: {% if edi_create_distributable_image %}changelog{% else %}full{% endif %}
