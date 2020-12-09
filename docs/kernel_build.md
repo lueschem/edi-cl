@@ -1,7 +1,7 @@
 # Kernel Build Instructions
 
 The following instructions are based upon the
-[Compulab instructions](https://github.com/compulab-yokneam/meta-bsp-imx8mm/blob/iot-gate-imx8_r2.0/Documentation/linux_kernel_build.md) but got slightly adapted so that a Debian package gets built.
+[Compulab instructions](https://github.com/compulab-yokneam/meta-bsp-imx8mm/blob/iot-gate-imx8_r2.1/Documentation/linux_kernel_build.md) but got slightly adapted so that a Debian package gets built.
 
 
 First we enter the cross development LXD container (for more details please check the README.md of this project):
@@ -19,7 +19,7 @@ sudo apt install build-essential bc kmod cpio flex cpio libncurses5-dev bison li
 Then we pull the Compulab patches and apply them to the linux-imx kernel:
 
 ``` bash
-export CPL_BRANCH=iot-gate-imx8_r2.0
+export CPL_BRANCH=iot-gate-imx8_r2.1
 cd ~/edi-workspace
 mkdir -p ${CPL_BRANCH} && cd ${CPL_BRANCH}
 git clone -b ${CPL_BRANCH} https://github.com/compulab-yokneam/meta-bsp-imx8mm.git
