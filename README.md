@@ -8,7 +8,7 @@ This [edi](https://www.get-edi.io) project configuration currently supports the
 The edi configuration contained in this repository can be used to
 generate the following artifacts:
 
-* A Debian buster arm64 (64bit) image suitable for the Compulab iot-gate-imx8.
+* A **minimal** Debian buster arm64 (64bit) image suitable for the Compulab iot-gate-imx8.
 * A matching Mender update artifact for the above configuration.
 * An amd64/arm64 based LXD container with a pre-installed
 cross development toolchain for C and C++.
