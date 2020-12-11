@@ -12,3 +12,10 @@
     default_release: buster-backports
     install_recommends: no
 
+- name: Copy sdma firmware.
+  copy:
+    src: "{{ item }}"
+    dest: /lib/firmware/imx/sdma/
+  with_items:
+    - sdma-imx6q.bin
+    - sdma-imx7d.bin
