@@ -14,16 +14,21 @@
     src: buster.list
     dest: /etc/apt/sources.list.d/
 
-- name: Add get-edi packagecloud repository apt key.
+- name: Add get-edi packagecloud repository apt keys.
   apt_key:
-    data: "{{ lookup('file', 'packagecloud.gpgkey') }}"
+    data: "{{ lookup('file', item) }}"
     state: present
+  loop:
+    - packagecloud.gpgkey
+    - packagecloud-backports.gpgkey
 
-- name: Add get-edi packagecloud repository to sources.list.d.
+- name: Add get-edi packagecloud repositories to sources.list.d.
   copy:
-    src: edi-repository.list
+    src: "{{ item }}"
     dest: /etc/apt/sources.list.d/
-
+  loop:
+    - edi-repository.list
+    - edi-backports-repository.list
 
 - name: Update apt cache.
   apt:
