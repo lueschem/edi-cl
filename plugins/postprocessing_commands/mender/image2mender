@@ -133,6 +133,6 @@ then
     INPUT_OPTION="--update"
 fi
 
-mender-artifact write rootfs-image --device-type ${DEVICE_TYPE} --artifact-name ${ARTIFACT_NAME} ${INPUT_OPTION} ${INPUT_IMAGE} --version 2 --output-path ${MENDER_ARTIFACT}
+mender-artifact write rootfs-image --device-type ${DEVICE_TYPE} --artifact-name ${ARTIFACT_NAME} ${INPUT_OPTION} ${INPUT_IMAGE} --version 2 --script ${SCRIPTDIR}/ArtifactInstall_Leave_50_ConfigurationBackup --script ${SCRIPTDIR}/ArtifactReboot_Leave_50_ConfigurationRestore --output-path ${MENDER_ARTIFACT}
 
 trap - EXIT
