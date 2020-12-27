@@ -68,7 +68,7 @@ then
     exit 1
 fi
 
-backup_folder="/data/configuration_backup"
+backup_folder="/data/backup"
 backup_log_file_path="${backup_folder}/log"
 
 ssh_config_folder="/etc/ssh"
