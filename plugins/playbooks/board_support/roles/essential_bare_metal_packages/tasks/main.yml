@@ -19,3 +19,8 @@
   with_items:
     - sdma-imx6q.bin
     - sdma-imx7d.bin
+
+- name: Ignore interfaces with link down.
+  copy:
+    src: 10-linkdown.conf
+    dest: /etc/sysctl.d/
