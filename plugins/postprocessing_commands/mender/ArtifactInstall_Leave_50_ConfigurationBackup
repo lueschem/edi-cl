@@ -75,14 +75,14 @@ ssh_config_folder="/etc/ssh"
 ssh_backup_folder="${backup_folder}/ssh"
 
 ssh_host_key_file_list=(
-/etc/ssh/ssh_host_dsa_key
-/etc/ssh/ssh_host_dsa_key.pub
-/etc/ssh/ssh_host_ecdsa_key
-/etc/ssh/ssh_host_ecdsa_key.pub
-/etc/ssh/ssh_host_ed25519_key
-/etc/ssh/ssh_host_ed25519_key.pub
-/etc/ssh/ssh_host_rsa_key
-/etc/ssh/ssh_host_rsa_key.pub
+ssh_host_dsa_key
+ssh_host_dsa_key.pub
+ssh_host_ecdsa_key
+ssh_host_ecdsa_key.pub
+ssh_host_ed25519_key
+ssh_host_ed25519_key.pub
+ssh_host_rsa_key
+ssh_host_rsa_key.pub
 )
 
 network_manager_config_folder="/etc/NetworkManager"

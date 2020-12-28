@@ -57,7 +57,7 @@ playbooks:
             hostname: edi-cl
             document_build_setup: true
             document_installed_packages: true
-            ssh_host_key_backup_folder: /data/backup
+            ssh_host_key_backup_folder: /data/backup/ssh
 
 postprocessing_commands:
     050_timestamp:
