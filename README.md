@@ -168,3 +168,7 @@ If you are curious about the U-Boot bootloader setup please take a look at this
 [blog post](https://www.get-edi.io/Booting-Debian-with-U-Boot/).
 
 For the kernel build instructions please check the [docs folder of this project](docs/kernel_build.md).
+
+The WiFi setup is [documented here](docs/wifi_setup.md).
+
+The backport of the mender-client package is [documented here](docs/mender_backport.md).
