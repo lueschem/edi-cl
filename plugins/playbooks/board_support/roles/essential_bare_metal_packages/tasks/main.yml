@@ -24,3 +24,8 @@
   copy:
     src: 10-linkdown.conf
     dest: /etc/sysctl.d/
+
+- name: Preset unused wpa_supplicant services to disabled.
+  copy:
+    src: 95-wpa_supplicant.preset
+    dest: /lib/systemd/system-preset/
