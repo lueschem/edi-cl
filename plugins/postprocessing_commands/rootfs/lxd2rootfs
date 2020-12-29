@@ -146,8 +146,8 @@ rm "${LXD_ROOTFS}/etc/machine-id"
 mkdir -p "${LXD_ROOTFS}/etc/mender/"
 echo "artifact_name=${ARTIFACT_NAME}" > "${LXD_ROOTFS}/etc/mender/artifact_info"
 
-# Do not wait for eth0 during boot.
-sed -i '/auto eth0/d' "${LXD_ROOTFS}/etc/network/interfaces.d/eth0"
+# Let NetworkManager handle eth0.
+rm "${LXD_ROOTFS}/etc/network/interfaces.d/eth0"
 
 mv "${LXD_ROOTFS}" "${ROOTFSDIR}"
 
