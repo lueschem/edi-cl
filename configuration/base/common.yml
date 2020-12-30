@@ -37,6 +37,7 @@ playbooks:
         parameters:
             create_default_user: True
             default_user_name: compulab
+            default_user_group_name: compulab
             # password is compulab
             default_user_password: "$6$Q5KPSC2ZJpqbAGRs$scgK3qsHEiJx3UFvixEzGOkkS8wQ1aNti/jTB0etoxx81QWqKMmTABDD.GviPLD4gPhfq4dqYFvOWtOQ5kevn1"
             install_openssh_server: True
