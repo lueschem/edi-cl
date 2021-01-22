@@ -1,0 +1,4 @@
+config:
+  security.nesting: "true"
+description: Enable nested edi lxc container
+name: nesting
