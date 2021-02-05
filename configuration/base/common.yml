@@ -11,7 +11,7 @@ bootstrap:
     tool: debootstrap
     repository: deb http://deb.debian.org/debian/ buster main
     repository_key: https://ftp-master.debian.org/keys/archive-key-10.asc
-    additional_packages: ["python3", "sudo", "netbase", "net-tools", "iputils-ping", "network-manager", "isc-dhcp-client", "systemd", "systemd-sysv", "gnupg", "dumb-init"]
+    additional_packages: ["python3", "python3-apt", "sudo", "netbase", "net-tools", "iputils-ping", "network-manager", "isc-dhcp-client", "systemd", "systemd-sysv", "gnupg", "dumb-init"]
 
 lxc_profiles:
     100_lxc_networking:
