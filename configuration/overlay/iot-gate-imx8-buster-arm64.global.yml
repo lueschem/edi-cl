@@ -25,7 +25,7 @@ playbooks:
     300_board_support:
         parameters:
             ebs_template: ucm-imx8m-mini
-            kernel_image: linux-image-5.4.24-iot-gate-imx8-2.3-00107-g4098e41a6413
+            kernel_image: linux-image-5.4.24-iot-gate-imx8-2.4-00113-gf467c0386c0a
     900_base_system_cleanup:
         parameters:
             hostname: iot-gate-imx8
