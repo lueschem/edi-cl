@@ -3,6 +3,9 @@
 This [edi](https://www.get-edi.io) project configuration currently supports the
 [Compulab iot-gate-imx8](https://www.compulab.com/products/iot-gateways/iot-gate-imx8-industrial-arm-iot-gateway/).
 
+<img alt="Compulab iot-gate-imx8" src=https://www.get-edi.io/assets/images/blog/IOT-GATE-iMX8.png width="75%"/>
+
+
 ## Introduction
 
 The edi configuration contained in this repository can be used to
