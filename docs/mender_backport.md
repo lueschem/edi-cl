@@ -1,5 +1,8 @@
 # Mender Client Backport for Debian Buster
 
+Remark: The Debian bullseye setup is using Mender from the Mender Debian repository. Therefore there is no
+backport for Debian bullseye.
+
 The following steps are required to backport a recent version of mender-client to Debian buster
 (we do everything on an iot-gate-imx8 to avoid cross compilation).
 
