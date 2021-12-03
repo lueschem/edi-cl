@@ -5,13 +5,6 @@
     state: present
     install_recommends: no
 
-- name: Install the firmware for the AX200 (iwlwifi) from buster-backports.
-  apt:
-    name: firmware-iwlwifi
-    state: present
-    default_release: buster-backports
-    install_recommends: no
-
 - name: Copy sdma firmware.
   copy:
     src: "{{ item }}"
@@ -19,11 +12,6 @@
   with_items:
     - sdma-imx6q.bin
     - sdma-imx7d.bin
-
-- name: Ignore interfaces with link down.
-  copy:
-    src: 10-linkdown.conf
-    dest: /etc/sysctl.d/
 
 - name: Preset unused wpa_supplicant services to disabled.
   copy:

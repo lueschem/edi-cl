@@ -5,11 +5,10 @@ general:
     edi_lxc_bridge_interface_name: edibr0
     parameters:
         ansible_pipelining: true
-        ansible_python_interpreter: /usr/bin/python3
 
 bootstrap:
     tool: debootstrap
-    repository: deb http://deb.debian.org/debian/ buster main
+    repository: deb http://deb.debian.org/debian/ bullseye main
     repository_key: https://ftp-master.debian.org/keys/archive-key-10.asc
     additional_packages:
       - python3
@@ -68,7 +67,7 @@ playbooks:
     900_base_system_cleanup:
         path: playbooks/debian/base_system_cleanup/main.yml
         parameters:
-            hostname: edi-cl
+            hostname: iot-gate-imx8
             document_build_setup: true
             document_installed_packages: true
             ssh_host_key_backup_folder: /data/backup/ssh

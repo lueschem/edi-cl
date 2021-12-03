@@ -128,6 +128,9 @@ if [ "$(( ${ROOTFS_START_S} + ${ROOTFS_SIZE_S} + 2 * ${MIB_ALIGNMENT_S} + ${BACK
         print_and_exit "ERROR" "${ROOT_DEV} is too small to duplicate the root file system"
     fi
 
+    # relocate GPT backup header to end of disk
+    sfdisk --relocate gpt-bak-std /dev/${ROOT_DEV}
+
     TEMP_PARTITION_TABLE=$(mktemp /tmp/partition-table.XXXXXX)
 
     # dump the existing disk layout

@@ -37,7 +37,6 @@ Required arguments:
 Optional arguments:
  -h, --help                                : Print help text.
  --log=LEVEL                               : Use --log=DEBUG to trace all commands.
- -w DIRECTORY, --workdir=DIRECTORY         : Working directory.
 EOF
 }
 
@@ -62,14 +61,13 @@ unexpected_exit()
     print_error_and_exit "Abnormal script termination."
 }
 
-if ! options=$(getopt -o hi:o:w:a:t: -l help,log:,input:,output:,workdir:,artifact:,type: -- "$@")
+if ! options=$(getopt -o hi:o:a:t: -l help,log:,input:,output:,artifact:,type: -- "$@")
 then
     print_usage
     print_error_and_exit "Invalid option."
 fi
 eval set -- "$options"
 
-WORKDIR="$(pwd)"
 SCRIPTDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 INPUT_IMAGE=""
 MENDER_ARTIFACT=""
@@ -83,9 +81,8 @@ do
         -h|--help)          print_usage && exit 0;;
         -i|--input)         INPUT_IMAGE="${2}"; shift 2;;
         -o|--output)        MENDER_ARTIFACT="${2}"; shift 2;;
-        -w|--workdir)       WORKDIR="${2}"; shift 2;;
-	-a|--artifact)      ARTIFACT_NAME="${2}"; shift 2;;
-	-t|--type)          DEVICE_TYPE="${2}"; shift 2;;
+        -a|--artifact)      ARTIFACT_NAME="${2}"; shift 2;;
+        -t|--type)          DEVICE_TYPE="${2}"; shift 2;;
         --log)              LOG_LEVEL="${2}"; shift 2;;
         *)                  break ;;
     esac
@@ -121,18 +118,25 @@ if ! which mender-artifact > /dev/null
 then
     print_error "Missing mender-artifact executable. Mender update artifact will not be built."
     # Ignore this error for now since the update image might not be needed for every use case.
-    echo "Mender update artifact not built due to missing mender-artifact executable." >> ${MENDER_ARTIFACT}
+    echo "Mender update artifact not built due to missing mender-artifact executable." >> "${MENDER_ARTIFACT}"
     exit 0
 fi
 
 INPUT_OPTION="--file"
-MENDER_ARTIFACT_VERSION=$(mender-artifact --version | cut -d' ' -f 3 | cut -d'.' -f 1)
+MENDER_ARTIFACT_VERSION=$(mender-artifact --version)
+MENDER_ARTIFACT_MAJOR_VERSION=$(echo "${MENDER_ARTIFACT_VERSION}" | cut -d' ' -f 3 | cut -d'.' -f 1)
 
-if [ ${MENDER_ARTIFACT_VERSION} -eq 2 ]
+if [[ ${MENDER_ARTIFACT_MAJOR_VERSION} -eq 2 ]]
 then
     INPUT_OPTION="--update"
 fi
 
-mender-artifact write rootfs-image --device-type ${DEVICE_TYPE} --artifact-name ${ARTIFACT_NAME} ${INPUT_OPTION} ${INPUT_IMAGE} --version 2 --script ${SCRIPTDIR}/ArtifactInstall_Leave_50_ConfigurationBackup --script ${SCRIPTDIR}/ArtifactReboot_Leave_50_ConfigurationRestore --output-path ${MENDER_ARTIFACT}
+# Special treatment for the Debian buster mender-artifact package:
+if [[ ${MENDER_ARTIFACT_VERSION} == *"really2"* ]]
+then
+    INPUT_OPTION="--update"
+fi
+
+mender-artifact write rootfs-image --device-type "${DEVICE_TYPE}" --artifact-name "${ARTIFACT_NAME}" ${INPUT_OPTION} "${INPUT_IMAGE}" --version 3 --script "${SCRIPTDIR}/ArtifactInstall_Leave_50_ConfigurationBackup" --script "${SCRIPTDIR}/ArtifactReboot_Leave_50_ConfigurationRestore" --output-path "${MENDER_ARTIFACT}"
 
 trap - EXIT

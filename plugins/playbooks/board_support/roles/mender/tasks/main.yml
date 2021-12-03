@@ -1,7 +1,41 @@
 ---
-- name: Install mender-client.
+- name: Create mender directory on data partition.
+  file:
+    path: /data/mender
+    state: directory
+
+- name: Create a symbolic link to the data partition.
+  file:
+    src: /data/mender
+    dest: /var/lib/mender
+    state: link
+
+- name: Mask some files that shall not be provided by the mender-client Debian package.
+  copy:
+    src: 05_mender_client
+    dest: /etc/dpkg/dpkg.cfg.d/
+
+- name: Add mender repository apt key.
+  apt_key:
+    data: "{{ lookup('file', 'mender.gpgkey') }}"
+    state: present
+
+- name: Add mender repository to sources.list.d.
+  template:
+    src: mender.list
+    dest: /etc/apt/sources.list.d/
+
+- name: Update apt cache.
   apt:
-    name: mender-client
+    update_cache: yes
+
+- name: Install mender-client, mender-connect, mender-configure and jq.
+  apt:
+    name:
+    - mender-client
+    - mender-connect
+    - mender-configure
+    - jq
     state: present
     install_recommends: no
 
@@ -19,6 +53,11 @@
     - { device: 'mmcblk2', partition_prefix: 'p' }
     - { device: 'sda', partition_prefix: '' }
 
+- name: Write mender-connect configuration.
+  copy:
+    src: mender-connect.conf
+    dest: /etc/mender/
+
 - name: Copy the script that adjusts the mender configuration.
   copy:
     src: edi-adjust-mender
@@ -31,11 +70,6 @@
   copy:
     src: edi-adjust-mender.service
     dest: /lib/systemd/system/
-
-- name: Create mender directory on data partition.
-  file:
-    path: /data/mender
-    state: directory
 
 - name: Configure the device type.
   template:

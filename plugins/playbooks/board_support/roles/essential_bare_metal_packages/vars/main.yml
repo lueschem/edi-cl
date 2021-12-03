@@ -1,8 +1,11 @@
 ---
 bare_metal_packages:
+  - firmware-iwlwifi
   - initramfs-tools
+  - libubootenv-tool
   - modemmanager
   - network-manager
   - udev
   - "{{ kernel_image }}"
+  - haveged
 

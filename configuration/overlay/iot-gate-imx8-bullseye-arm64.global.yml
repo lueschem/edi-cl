@@ -11,7 +11,6 @@ bootstrap:
       - netbase
       - net-tools
       - iputils-ping
-      - network-manager
       - isc-dhcp-client
       - systemd
       - systemd-sysv
@@ -21,14 +20,11 @@ bootstrap:
 playbooks:
     100_base_system:
         parameters:
-            lxc_network_interface_manager: network-manager
+            lxc_network_interface_manager: iproute2
     300_board_support:
         parameters:
             ebs_template: ucm-imx8m-mini
             kernel_image: linux-image-5.4.24-iot-gate-imx8-2.4-00113-gf467c0386c0a
-    900_base_system_cleanup:
-        parameters:
-            hostname: iot-gate-imx8
 
 shared_folders:
     edi_workspace:

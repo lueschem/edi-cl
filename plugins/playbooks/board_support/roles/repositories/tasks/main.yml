@@ -9,26 +9,20 @@
     dest: /etc/apt/sources.list
     state: absent
 
-- name: Readd buster repository.
+- name: Readd bullseye repository.
   copy:
-    src: buster.list
+    src: bullseye.list
     dest: /etc/apt/sources.list.d/
 
-- name: Add get-edi packagecloud repository apt keys.
+- name: Add get-edi packagecloud repository apt key.
   apt_key:
-    data: "{{ lookup('file', item) }}"
+    data: "{{ lookup('file', 'packagecloud.gpgkey') }}"
     state: present
-  loop:
-    - packagecloud.gpgkey
-    - packagecloud-backports.gpgkey
 
-- name: Add get-edi packagecloud repositories to sources.list.d.
+- name: Add get-edi packagecloud repository to sources.list.d.
   copy:
-    src: "{{ item }}"
+    src: edi-repository.list
     dest: /etc/apt/sources.list.d/
-  loop:
-    - edi-repository.list
-    - edi-backports-repository.list
 
 - name: Update apt cache.
   apt:

@@ -12,10 +12,13 @@
     src: multiboot.cfg
     dest: /etc/edi-boot-shim/edi-boot-shim.cfg.d
 
-- name: Install edi-boot-shim.
+- name: Install edi-boot-shim and its u-boot dependency.
   apt:
-    name: edi-boot-shim
+    name: "{{ item }}"
     install_recommends: no
+  loop:
+  - edi-boot-shim
+  - u-boot-tools
 
 - name: Create boot firmware directory.
   file:

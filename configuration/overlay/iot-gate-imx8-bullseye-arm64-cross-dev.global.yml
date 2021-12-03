@@ -11,9 +11,6 @@ playbooks:
             install_development_tools: True
             install_cross_development_tools: True
             cross_architecture: arm64
-    900_base_system_cleanup:
-        parameters:
-            hostname: iot-gate-imx8
 
 postprocessing_commands:
     050_timestamp:
