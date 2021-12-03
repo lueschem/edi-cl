@@ -54,7 +54,7 @@
     - { device: 'sda', partition_prefix: '' }
 
 - name: Write mender-connect configuration.
-  copy:
+  template:
     src: mender-connect.conf
     dest: /etc/mender/
 
