@@ -37,7 +37,7 @@ The image post processing commands require some additional tools. On
 Ubuntu 20.04 those tools can be installed as follows:
 
 ``` bash
-sudo apt install e2fsprogs bmap-tools mtools parted zerofree python3-sphinx mender-artifact
+sudo apt install e2fsprogs bmap-tools mtools parted rsync zerofree python3-sphinx mender-artifact
 ```
 
 ### Creating a Target Image
