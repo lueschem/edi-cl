@@ -1,4 +1,5 @@
 - hosts: all
+  gather_facts: no
 
   vars:
     # Kernel as to be installed from apt install <kernel_image> ie linux-image-arm64. Set in config overlay.
