@@ -39,3 +39,5 @@ make -j $(nproc) KBUILD_IMAGE=arch/arm64/boot/Image ARCH=arm64 CROSS_COMPILE=aar
 ```
 
 The resulting Debian package got uploaded to [this packagecloud repository](https://packagecloud.io/get-edi/debian/).
+
+Recent kernels get built automatically using [this workflow](https://github.com/lueschem/edi-ci-public/blob/main/.github/workflows/kernel-build-iot-gate-imx8.yml).
