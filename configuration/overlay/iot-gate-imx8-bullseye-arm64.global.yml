@@ -24,7 +24,7 @@ playbooks:
     300_board_support:
         parameters:
             ebs_template: ucm-imx8m-mini
-            kernel_image: linux-image-5.4.24-iot-gate-imx8-2.5-00125-g230c309f9b4d
+            kernel_image: linux-image-5.10.72-iot-gate-imx8-3.1-00084-gcdebef376c10
 
 shared_folders:
     edi_workspace:
