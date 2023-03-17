@@ -4,27 +4,14 @@ general:
 
 bootstrap:
     architecture: arm64
-    additional_packages:
-      - python3
-      - python3-apt
-      - sudo
-      - netbase
-      - net-tools
-      - iputils-ping
-      - isc-dhcp-client
-      - systemd
-      - systemd-sysv
-      - gnupg
-      - dumb-init
 
 playbooks:
-    100_base_system:
-        parameters:
-            lxc_network_interface_manager: iproute2
     300_board_support:
         parameters:
             ebs_template: ucm-imx8m-mini
-            kernel_image: linux-image-5.10.72-iot-gate-imx8-3.1-00084-gcdebef376c10
+            kernel_image: linux-image-5.10.72-iot-gate-imx8-3.1-00084-gc60160a12fb6
+    500_gitops:
+        path: playbooks/gitops/main.yml
 
 shared_folders:
     edi_workspace:

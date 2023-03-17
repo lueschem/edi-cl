@@ -1,28 +1,47 @@
 ---
-- name: Create mender directory on data partition.
+- name: Create mender directories on data partition.
   file:
-    path: /data/mender
+    path: /data/{{ item }}
     state: directory
+  loop:
+    - mender
+    - mender-monitor
 
-- name: Create a symbolic link to the data partition.
+- name: Create symbolic links to the data partition.
   file:
-    src: /data/mender
-    dest: /var/lib/mender
+    src: /data/{{ item }}
+    dest: /var/lib/{{ item }}
     state: link
+  loop:
+    - mender
+    - mender-monitor
+
+- name: Create directory for mender-configure configuration.
+  file:
+    dest: /var/lib/mender-configure
+    state: directory
+    mode: 0755
+
+- name: Add an empty mender-configure configuration.
+  copy:
+    src: empty.json
+    dest: /var/lib/mender-configure/device-config.json
+    mode: 0600
 
 - name: Mask some files that shall not be provided by the mender-client Debian package.
   copy:
     src: 05_mender_client
     dest: /etc/dpkg/dpkg.cfg.d/
 
-- name: Add mender repository apt key.
-  apt_key:
-    data: "{{ lookup('file', 'mender.gpgkey') }}"
-    state: present
+- name: Add Mender repository key.
+  copy:
+    src: mender-io-archive-keyring.gpg
+    dest: /usr/share/keyrings/
+    mode: 0644
 
 - name: Add mender repository to sources.list.d.
   template:
-    src: mender.list
+    src: mender-io.list
     dest: /etc/apt/sources.list.d/
 
 - name: Update apt cache.
@@ -85,7 +104,7 @@
     - "{{ mender_config_directory }}/inventory/*"
 
 - name: Copy identity scripts.
-  copy:
+  template:
     src: "{{ item }}"
     dest: /usr/share/mender/identity/
     mode: 0755

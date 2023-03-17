@@ -11,15 +11,14 @@ This [edi](https://www.get-edi.io) project configuration currently supports the
 The edi configuration contained in this repository can be used to
 generate the following artifacts:
 
-* A **minimal** Debian bullseye arm64 (64bit) image suitable for the Compulab iot-gate-imx8.
+* A **minimal** Debian bookworm arm64 (64bit) image suitable for the Compulab iot-gate-imx8.
 * A matching Mender update artifact for the above configuration.
-* An amd64/arm64 based LXD container with a pre-installed
-cross development toolchain for C and C++.
+* An LXD container with a pre-installed cross development toolchain (arm64) for C and C++.
 
 ## Important Note
 
-Please note that image generation operations require superuser privileges
-and therefore you can easily break your host operating system. Therefore
+Please note that image generation operations require superuser privileges,
+and therefore you can easily break your host operating system. Therefore,
 make sure that you have a backup copy of your data.
 
 ## Basic Usage
@@ -33,8 +32,8 @@ Please take a careful look at the "Setting up ssh Keys" section since you
 will need a proper ssh key setup in order to access the container or
 the target device using ssh.
 
-The image post processing commands require some additional tools. On
-Ubuntu 20.04 those tools can be installed as follows:
+The image post-processing commands require some additional tools. On
+Ubuntu 20.04 and newer those tools can be installed as follows:
 
 ``` bash
 sudo apt install e2fsprogs bmap-tools mtools parted rsync zerofree python3-sphinx mender-artifact
@@ -45,7 +44,7 @@ sudo apt install e2fsprogs bmap-tools mtools parted rsync zerofree python3-sphin
 A target image can be created using the following command:
 
 ``` bash
-sudo edi -v image create iot-gate-imx8-bullseye-arm64.yml
+sudo edi -v image create iot-gate-imx8.yml
 ```
 
 The resulting image can be copied to a USB stick (here /dev/sda)
@@ -53,7 +52,7 @@ using the following command
 (**Please note that everything on the USB stick will be erased!**):
 
 ``` bash
-sudo bmaptool copy artifacts/iot-gate-imx8-bullseye-arm64.img /dev/sda
+sudo bmaptool copy artifacts/iot-gate-imx8.img /dev/sda
 ```
 
 If the command fails, unmount the USB stick (`sudo umount /dev/sda?`) and repeat the above command.
@@ -80,7 +79,7 @@ The same image that has been used for the USB stick can also be flashed to the b
 Copy the image to the device that has been booted from the USB stick:
 
 ``` bash
-scp artifacts/iot-gate-imx8-bullseye-arm64.img compulab@IP_ADDRESS:
+scp artifacts/iot-gate-imx8.img compulab@IP_ADDRESS:
 ```
 
 Access the device:
@@ -92,7 +91,7 @@ ssh compulab@IP_ADDRESS
 Flash the image to the eMMC (**Everything on mmcblk2 will be erased!**):
 
 ``` bash
-sudo dd if=iot-gate-imx8-bullseye-arm64.img of=/dev/mmcblk2 bs=1M
+sudo dd if=iot-gate-imx8.img of=/dev/mmcblk2 bs=1M
 ```
 
 Now you can remove the power supply and the USB stick from the device.
@@ -113,13 +112,13 @@ A cross development container can be created using the
 following command:
 
 ``` bash
-sudo edi -v lxc configure iot-gate-imx8-bullseye-arm64-cross-dev iot-gate-imx8-bullseye-arm64-cross-dev.yml
+sudo edi -v lxc configure iot-gate-imx8-cross-dev-bookworm iot-gate-imx8-cross-dev.yml
 ```
 
 The container can be accessed as follows (the password is _ChangeMe!_):
 
 ``` bash
-lxc exec iot-gate-imx8-bullseye-arm64-cross-dev -- login ${USER}
+lxc exec iot-gate-imx8-cross-dev-bookworm -- login ${USER}
 ```
 
 Or with ssh (Hint: retrieve IP_OF_CONTAINER with `lxc list`):
@@ -137,7 +136,6 @@ aarch64-linux-gnu-g++ ...
 
 For your convenience, the LXD container shares the folder _edi-workspace_
 with the host operating system.
-
 
 ## Documenting an Artifact
 
