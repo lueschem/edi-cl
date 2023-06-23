@@ -9,7 +9,7 @@ playbooks:
     300_board_support:
         parameters:
             ebs_template: ucm-imx8m-mini
-            kernel_image: linux-image-5.10.72-iot-gate-imx8-3.1-00085-g5b6796772467
+            kernel_image: linux-image-5.15.32-iot-gate-imx8m-3.2.1+
     500_gitops:
         path: playbooks/gitops/main.yml
 
