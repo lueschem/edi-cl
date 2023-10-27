@@ -1,5 +1,6 @@
 ---
 bare_metal_packages:
+  - fdisk
   - firmware-iwlwifi
   - haveged
   - initramfs-tools
