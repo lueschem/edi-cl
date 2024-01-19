@@ -5,7 +5,7 @@ This [edi](https://www.get-edi.io) project configuration currently supports the
 
 <img alt="Compulab iot-gate-imx8" src=https://www.get-edi.io/assets/images/blog/IOT-GATE-iMX8.png width="75%"/>
 
-> **Note**
+> [!NOTE]
 > The *master* branch is currently basing upon Debian *bookworm*.
 > For Debian *bullseye* please check out the *debian_bullseye* branch.
 
