@@ -1,0 +1,15 @@
+---
+bare_metal_packages:
+  - fdisk
+  - firmware-iwlwifi
+  - haveged
+  - initramfs-tools
+  - iproute2
+  - "{{ kernel_image }}"
+  - libubootenv-tool
+  - modemmanager
+  - network-manager
+  - systemd-timesyncd
+  - udev
+  - wpasupplicant
+

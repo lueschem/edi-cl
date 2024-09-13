@@ -2,11 +2,12 @@
 
 set -o errexit
 set -o nounset
+set -o pipefail
 
-source {{ pp_timestamp }}
-
-LOG_LEVEL="{{ edi_log_level }}"
 WORKDIR="{{ edi_work_directory }}"
+CONTAINER_NAME="{{ edi_project_container }}"
+ROOTFS_ARCHIVE="{{ pp_rootfs_archive }}"
+LOG_LEVEL="{{ edi_log_level }}"
 
 print_error()
 {
@@ -44,16 +45,21 @@ if [[ ${EUID} -eq 0 ]]; then
    print_error_and_exit "This script must not be run as root."
 fi
 
+if ! buildah inspect "${CONTAINER_NAME}" > /dev/null 2>&1; then
+   print_error_and_exit "The container ${CONTAINER_NAME} does not exist."
+fi
+
 TEMPDIR="$(mktemp -p ${WORKDIR} -d -t .tmp.XXXXXXXX)"
 
 trap "unexpected_exit ${TEMPDIR}" EXIT
 
-pushd "${TEMPDIR}" > /dev/null
-tar -xf "{{ pp_rootfs_archive }}" ./usr/share/doc
-popd > /dev/null
+TEMP_ARCHIVE="${TEMPDIR}/archive.tar"
+NESTED_COMMAND="tar --numeric-owner -C "'"${container_root}"'" -acf ${TEMP_ARCHIVE} ."
+buildah unshare --mount container_root="${CONTAINER_NAME}" -- bash -c "${NESTED_COMMAND}"
 
-{{ edi_current_plugin_directory }}/write_doc --project "{{ edi_configuration_name }}-{{ debian_distribution_release }}-{{ edi_bootstrap_architecture }}" --release "${BUILD_TIMESTAMP}" --author "{{ author }}" --input "${TEMPDIR}/usr/share/doc" --output "{{ pp_documentation }}" --config "{{ edi_project_directory }}/{{ edi_configuration_name }}.yml" --log "{{ edi_log_level }}"
+mv "${TEMP_ARCHIVE}" "${ROOTFS_ARCHIVE}"
 
 clean_up "${TEMPDIR}"
 
 trap - EXIT
+

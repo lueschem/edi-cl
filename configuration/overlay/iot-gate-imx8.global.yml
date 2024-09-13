@@ -1,17 +1,11 @@
 general:
     parameters:
         mender_device_type: iot-gate-imx8
-
-bootstrap:
-    architecture: arm64
+        edi_bootstrap_architecture: arm64
+        qemu_emulated_cpu: cortex-a57
 
 playbooks:
-    300_board_support:
+    100_os_setup:
         parameters:
             ebs_template: ucm-imx8m-mini
-            kernel_image: linux-image-5.15.32-iot-gate-imx8m-3.2.1+
-
-shared_folders:
-    edi_workspace:
-        folder: edi-workspace
-        mountpoint: edi-workspace
+            kernel_image: linux-image-5.15.32-iot-gate-imx8m-3.2.2+

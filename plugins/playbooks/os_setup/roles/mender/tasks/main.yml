@@ -1,0 +1,113 @@
+---
+- name: Create mender directories on data partition.
+  file:
+    path: /data/{{ item }}
+    state: directory
+  loop:
+    - mender
+    - mender-monitor
+
+- name: Create symbolic links to the data partition.
+  file:
+    src: /data/{{ item }}
+    dest: /var/lib/{{ item }}
+    state: link
+  loop:
+    - mender
+    - mender-monitor
+
+- name: Create directory for mender-configure configuration.
+  file:
+    dest: /var/lib/mender-configure
+    state: directory
+    mode: 0755
+
+- name: Add an empty mender-configure configuration.
+  copy:
+    src: empty.json
+    dest: /var/lib/mender-configure/device-config.json
+    mode: 0600
+
+- name: Mask some files that shall not be provided by the mender-update Debian package.
+  copy:
+    src: 05_mender_update
+    dest: /etc/dpkg/dpkg.cfg.d/
+
+- name: Add Mender repository key.
+  copy:
+    src: mender-io-archive-keyring.gpg
+    dest: /usr/share/keyrings/
+    mode: 0644
+
+- name: Add mender repository to sources.list.d.
+  template:
+    src: mender-io.list
+    dest: /etc/apt/sources.list.d/
+
+- name: Update apt cache.
+  apt:
+    update_cache: yes
+
+- name: Install mender-update, mender-flash, mender-connect, mender-configure and jq.
+  apt:
+    name:
+    - mender-update
+    - mender-flash
+    - mender-connect
+    - mender-configure
+    - jq
+    state: present
+    install_recommends: no
+
+- name: Load project specific (customized) mender configuration.
+  include_vars: "{{ item }}"
+  with_first_found:
+    - "{{ mender_config_directory }}/mender_custom.yml"
+    - "{{ mender_config_directory }}/mender.yml"
+
+- name: Write mender main configurations.
+  template:
+    src: mender.conf
+    dest: /etc/mender/mender.conf.{{ item.device }}
+  loop:
+    - { device: 'mmcblk2', partition_prefix: 'p' }
+    - { device: 'sda', partition_prefix: '' }
+
+- name: Write mender-connect configuration.
+  template:
+    src: mender-connect.conf
+    dest: /etc/mender/
+
+- name: Copy the script that adjusts the mender configuration.
+  copy:
+    src: edi-adjust-mender
+    dest: /usr/bin/
+    mode: 0755
+    owner: root
+    group: root
+
+- name: Add a systemd service that triggers the adjustment of the mender configuration.
+  copy:
+    src: edi-adjust-mender.service
+    dest: /lib/systemd/system/
+
+- name: Configure the device type.
+  template:
+    src: device_type
+    dest: /data/mender/device_type
+
+- name: Copy inventory scripts.
+  copy:
+    src: "{{ item }}"
+    dest: /usr/share/mender/inventory/
+    mode: 0755
+  with_fileglob:
+    - "{{ mender_config_directory }}/inventory/*"
+
+- name: Copy identity scripts.
+  template:
+    src: "{{ item }}"
+    dest: /usr/share/mender/identity/
+    mode: 0755
+  with_fileglob:
+    - "{{ mender_config_directory }}/identity/*"

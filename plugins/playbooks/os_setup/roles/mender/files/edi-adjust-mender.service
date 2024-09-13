@@ -1,0 +1,10 @@
+[Unit]
+Description=Adjust mender configuration according to boot device
+Before=mender-authd.service mender-updated.service mender-connect.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/edi-adjust-mender
+
+[Install]
+WantedBy=mender-authd.service

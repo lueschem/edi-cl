@@ -1,0 +1,104 @@
+#!/bin/bash
+
+# Copyright (C) 2024 Matthias Luescher
+#
+# Authors:
+#  Matthias Luescher
+#
+# This file is part of the edi project configuration.
+#
+# This script is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Lesser General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This script is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public License
+# along with the edi project configuration.  If not, see <http://www.gnu.org/licenses/>.
+
+set -o errexit
+set -o pipefail
+set -o nounset
+
+source "{{ pp_timestamp }}"
+
+LOG_LEVEL="{{ edi_log_level }}"
+INPUT_ARCHIVE="{{ pp_rootfs_archive }}"
+PLUGIN_DIRECTORY="{{ edi_current_plugin_directory }}"
+DISK_IMAGE="{{ pp_image }}"
+PARTITION_IMAGE="{{ pp_partition_image }}"
+WORKDIR="{{ edi_work_directory }}"
+HOSTNAME="{{ hostname }}"
+ARTIFACT_NAME="${BUILD_TIMESTAMP}-{{ edi_configuration_name }}-{{ debian_distribution_release }}-{{ edi_bootstrap_architecture }}"
+
+print_error()
+{
+    local MESSAGE="${1}"
+    >&2 echo -e "\033[91mError: ${MESSAGE}\033[0m"
+}
+
+print_error_and_exit()
+{
+    local MESSAGE="${1}"
+    print_error "${MESSAGE}"
+    exit 1
+}
+
+unexpected_exit()
+{
+    local TEMPDIR="${1}"
+    print_error "Going to clean up after abnormal script termination."
+    rm -rf "${TEMPDIR}"
+    trap - EXIT
+    print_error_and_exit "Abnormal script termination."
+}
+
+if [ "${LOG_LEVEL}" == "DEBUG" ]; then
+    set -x
+fi
+
+if touch /etc/edi-fakeroot-check > /dev/null 2>&1; then
+    print_error_and_exit "This script must not be run as real root - please use fakeroot."
+fi
+
+if [[ ${EUID} -ne 0 ]]; then
+    print_error_and_exit "This script must be run using fakeroot."
+fi
+
+TEMPDIR="$(mktemp -p "${WORKDIR}" -d -t .tmp.XXXXXXXX)"
+trap "unexpected_exit ${TEMPDIR}" EXIT
+
+pushd "${TEMPDIR}" > /dev/null
+
+mkdir rootfs
+
+tar --numeric-owner --exclude-from "${PLUGIN_DIRECTORY}/exclude-patterns" -C rootfs/ -axf "${INPUT_ARCHIVE}"
+
+# Remove /etc/machine-id and /var/lib/dbus/machine-id (it should be unique for each system).
+rm rootfs/etc/machine-id
+rm rootfs/var/lib/dbus/machine-id
+
+# Add artifact information to rootfs.
+mkdir -p "rootfs/etc/mender/"
+echo "artifact_name=${ARTIFACT_NAME}" > rootfs/etc/mender/artifact_info
+
+# Adjust hostname.
+cp "${PLUGIN_DIRECTORY}/hosts" rootfs/etc/
+chmod 0644 rootfs/etc/hosts
+sed -i "s@__HOSTNAME__@${HOSTNAME}@" rootfs/etc/hosts
+cp "${PLUGIN_DIRECTORY}/hostname" rootfs/etc/
+sed -i "s@__HOSTNAME__@${HOSTNAME}@" rootfs/etc/hostname
+
+genimage --rootpath rootfs --config "${PLUGIN_DIRECTORY}/genimage.cfg" --tmppath genimage-workdir
+
+popd > /dev/null
+
+mv "${TEMPDIR}/images/disk-image.img" "${DISK_IMAGE}"
+mv "${TEMPDIR}/images/root.ext4" "${PARTITION_IMAGE}"
+
+rm -rf "${TEMPDIR}"
+trap - EXIT

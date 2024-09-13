@@ -1,0 +1,3 @@
+[submodule "submodules/ansible_collections/get_edi_io/debian_setup"]
+	path = submodules/ansible_collections/get_edi_io/debian_setup
+	url = https://github.com/lueschem/debian_setup.git
