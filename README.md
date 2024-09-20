@@ -131,7 +131,7 @@ edi -v project make iot-gate-imx8-cross-dev.yml
 distrobox can be used to transform the image into a convenient development container:
 
 ``` bash
-source artifacts/pi-cross-dev_manifest
+source artifacts/iot-gate-imx8-cross-dev_manifest
 distrobox create --image ${podman_image} --name SOME_CONTAINER_NAME --init --unshare-all --additional-packages "systemd libpam-systemd"
 ```
 
