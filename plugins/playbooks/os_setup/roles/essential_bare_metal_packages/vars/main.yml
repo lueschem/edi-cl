@@ -1,5 +1,6 @@
 ---
 bare_metal_packages:
+  - e2fsprogs
   - fdisk
   - firmware-iwlwifi
   - haveged
