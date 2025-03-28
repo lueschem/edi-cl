@@ -1,0 +1,4 @@
+# Configuration file for fw_(printenv/setenv) utility.
+
+# Block device for CompuLab imx8m-plus (eMMC)
+/dev/mmcblk2boot0	0x3f0000 0x4000

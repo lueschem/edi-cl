@@ -43,8 +43,8 @@
 
 - name: Configure u-boot-tools.
   copy:
-    src: fw_env.config
-    dest: /data/u-boot
+    src: fw_env.config.{{ mender_device_type }}
+    dest: /data/u-boot/fw_env.config
 
 - name: Create symbolic link for the u-boot-tools config.
   file:
