@@ -1,12 +1,12 @@
 ---
 bare_metal_packages:
-  - e2fsprogs
-  - fdisk
+  - edi-resize-rootfs
+  - edi-set-hostname
   - firmware-iwlwifi
   - haveged
-  - initramfs-tools
   - iproute2
   - "{{ kernel_image }}"
+  - kmod
   - libubootenv-tool
   - modemmanager
   - network-manager
