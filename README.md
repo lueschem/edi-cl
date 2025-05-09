@@ -1,22 +1,30 @@
 # edi Project Configuration for Compulab Devices
 
 This [edi](https://www.get-edi.io) project configuration currently supports the
-[Compulab iot-gate-imx8](https://www.compulab.com/products/iot-gateways/iot-gate-imx8-industrial-arm-iot-gateway/).
+[Compulab iot-gate-imx8](https://www.compulab.com/products/iot-gateways/iot-gate-imx8-industrial-arm-iot-gateway/)
+as well as the
+[Compulab iot-din-imx8plus](https://www.compulab.com/products/iot-gateways/iot-din-imx8plus-industrial-iot-gateway/)
+device.
 
-<img alt="Compulab iot-gate-imx8" src=https://www.get-edi.io/assets/images/blog/IOT-GATE-iMX8.png width="75%"/>
+<img alt="Compulab iot-gate-imx8 and iot-din-imx8plus" src=https://www.get-edi.io/assets/images/blog/compulab-iot.png width="75%"/>
 
 > [!NOTE]
 > The *master* branch is **experimental** and currently based on Debian *trixie*.
-> To get the stable Debian *bookworm* configuration please check out the *debian_bookworm* branch.
+> To get the stable Debian *bookworm* configuration, please check out the *debian_bookworm* branch.
 
 ## Introduction
 
 The edi configuration contained in this repository can be used to
 generate the following artifacts:
 
-* A **minimal** Debian trixie arm64 (64bit) image suitable for the Compulab iot-gate-imx8.
-* A matching Mender update artifact for the above configuration.
+* **Minimal** Debian trixie arm64 (64bit) images suitable for the Compulab iot-gate-imx8 or iot-din-imx8plus.
+* Matching Mender update artifacts for the above configurations.
 * A Podman/Docker image with a pre-installed cross development toolchain (arm64) for C and C++.
+
+> [!NOTE]
+> The **iot-din-imx8plus** images do currently not include scripts that are required for operating the I/O extension
+> modules. If those scripts are required for your project, please consider fetching them from
+> [this repository](https://github.com/compulab-yokneam/bin/tree/iotdin-imx8p) and adding them to the image.
 
 ## Basic Usage
 
@@ -26,11 +34,10 @@ Prior to using this edi project configuration you have to install
 [edi](https://www.get-edi.io) according to
 [this instructions](https://docs.get-edi.io/en/stable/getting_started_v2.html).
 Please take a careful look at the "Setting up ssh Keys" section since you
-will need a proper ssh key setup in order to access the
-the target device using ssh.
+will need a proper ssh key setup to access the target device using ssh.
 
 The artifact generation requires some additional tools. On
-Ubuntu 24.04 and newer those tools can be installed as follows:
+Ubuntu 24.04 and newer, those tools can be installed as follows:
 
 ``` bash
 sudo apt install buildah containers-storage crun curl distrobox dosfstools e2fsprogs fakeroot genimage git mender-artifact mmdebstrap mtools parted python3-sphinx python3-testinfra podman rsync zerofree
@@ -51,7 +58,7 @@ The following steps assume that you are located within the project configuration
 cd ~/edi-workspace/edi-cl/
 ```
 
-If the repository has already been cloned earlier, do not forget to update the submodules:
+If the repository has already been cloned earlier, remember to update the submodules:
 
 ``` bash
 git submodule update --init
@@ -61,7 +68,7 @@ git submodule update --init
 
 To enable over the air (OTA) updates, the generated images are configured
 to connect to [https://hosted.mender.io/](https://hosted.mender.io/).
-In order to connect to your Mender tenant you have to provide your tenant token prior to building the images.
+To connect to your Mender tenant, you have to provide your tenant token before building the images.
 The tenant token can be added to `configuration/mender/mender.yml`. If you do not want to
 add the tenant token to the version control system you can also copy `configuration/mender/mender.yml` to
 `configuration/mender/mender_custom.yml` and add the tenant token there.
@@ -70,25 +77,42 @@ add the tenant token to the version control system you can also copy `configurat
 
 A target image can be created using the following command:
 
+For the iot-gate-imx8 device:
+
 ``` bash
 edi -v project make iot-gate-imx8.yml
+```
+
+For the iot-din-imx8plus device:
+
+``` bash
+edi -v project make iot-din-imx8plus.yml
 ```
 
 The resulting image can be copied to a USB stick (here /dev/sda)
 using the following command
 (**Please note that everything on the USB stick will be erased!**):
 
+For the iot-gate-imx8 device:
+
 ``` bash
 sudo umount /dev/sda?
 sudo dd if=artifacts/iot-gate-imx8.img of=/dev/sda bs=4M conv=fsync status=progress
 ```
 
-**Warning: The image requires u-boot version 2.0 or above!** Please follow the
+For the iot-din-imx8plus device:
+
+``` bash
+sudo umount /dev/sda?
+sudo dd if=artifacts/iot-din-imx8plus.img of=/dev/sda bs=4M conv=fsync status=progress
+```
+
+**Warning (iot-gate-imx8): The image requires u-boot version 2.0 or above!** Please follow the
 [Compulab instructions](https://mediawiki.compulab.com/w/index.php?title=IOT-GATE-iMX8_and_SBC-IOT-iMX8:_U-Boot:_Update)
 in case you need to upgrade the bootloader of your device.
 
 Once you have booted the device using the above USB stick (plugged into the USB port
-next to the power button) you can access it using ssh (the access should be granted
+(iot-gate-imx8: USB port next to the power button)), you can access it using ssh (the access should be granted
 thanks to to your ssh keys):
 
 ``` bash
@@ -104,8 +128,16 @@ The same image that has been used for the USB stick can also be flashed to the b
 
 Copy the image to the device that has been booted from the USB stick:
 
+For the iot-gate-imx8 device:
+
 ``` bash
 scp artifacts/iot-gate-imx8.img compulab@IP_ADDRESS:
+```
+
+For the iot-din-imx8plus device:
+
+``` bash
+scp artifacts/iot-din-imx8plus.img compulab@IP_ADDRESS:
 ```
 
 Access the device:
@@ -116,8 +148,16 @@ ssh compulab@IP_ADDRESS
 
 Flash the image to the eMMC (**Everything on mmcblk2 will be erased!**):
 
+For the iot-gate-imx8 device:
+
 ``` bash
 sudo dd if=iot-gate-imx8.img of=/dev/mmcblk2 bs=4M conv=fsync status=progress
+```
+
+For the iot-din-imx8plus device:
+
+``` bash
+sudo dd if=iot-din-imx8plus.img of=/dev/mmcblk2 bs=4M conv=fsync status=progress
 ```
 
 Now you can remove the power supply and the USB stick from the device.
