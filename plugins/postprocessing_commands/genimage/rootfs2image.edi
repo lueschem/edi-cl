@@ -32,7 +32,7 @@ PLUGIN_DIRECTORY="{{ edi_current_plugin_directory }}"
 DISK_IMAGE="{{ pp_image }}"
 PARTITION_IMAGE="{{ pp_partition_image }}"
 WORKDIR="{{ edi_work_directory }}"
-HOSTNAME="{{ hostname }}"
+HOSTNAME="{{ mender_device_type }}"
 ARTIFACT_NAME="${BUILD_TIMESTAMP}-{{ edi_configuration_name }}-{{ debian_distribution_release }}-{{ edi_bootstrap_architecture }}"
 
 print_error()

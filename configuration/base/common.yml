@@ -60,8 +60,6 @@ postprocessing_commands:
             pp_partition_image:
                 location: {{ edi_configuration_name }}_rootfs.ext4
                 type: path
-        parameters:
-            hostname: iot-gate-imx8
     400_mender:
         path: postprocessing_commands/mender/image2mender.edi
         output:
