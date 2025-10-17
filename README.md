@@ -9,8 +9,8 @@ device.
 <img alt="Compulab iot-gate-imx8 and iot-din-imx8plus" src=https://www.get-edi.io/assets/images/blog/compulab-iot.png width="75%"/>
 
 > [!NOTE]
-> The *master* branch is **experimental** and currently based on Debian *trixie*.
-> To get the stable Debian *bookworm* configuration, please check out the *debian_bookworm* branch.
+> The *master* branch is currently based on Debian *trixie*.
+> To get the Debian *bookworm* configuration, please check out the *debian_bookworm* branch.
 
 ## Introduction
 
