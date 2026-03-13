@@ -1,9 +1,10 @@
 # edi Project Configuration for Compulab Devices
 
 This [edi](https://www.get-edi.io) project configuration currently supports the
-[Compulab iot-gate-imx8](https://www.compulab.com/products/iot-gateways/iot-gate-imx8-industrial-arm-iot-gateway/)
-as well as the
+[Compulab iot-gate-imx8](https://www.compulab.com/products/iot-gateways/iot-gate-imx8-industrial-arm-iot-gateway/),
 [Compulab iot-din-imx8plus](https://www.compulab.com/products/iot-gateways/iot-din-imx8plus-industrial-iot-gateway/)
+as well as the
+[Compulab iot-gate-imx8plus](https://www.compulab.com/products/iot-gateways/iot-gate-imx8plus-industrial-arm-iot-gateway/)
 device.
 
 <img alt="Compulab iot-gate-imx8 and iot-din-imx8plus" src=https://www.get-edi.io/assets/images/blog/compulab-iot.png width="75%"/>
@@ -17,7 +18,7 @@ device.
 The edi configuration contained in this repository can be used to
 generate the following artifacts:
 
-* **Minimal** Debian trixie arm64 (64bit) images suitable for the Compulab iot-gate-imx8 or iot-din-imx8plus.
+* **Minimal** Debian trixie arm64 (64bit) images suitable for the Compulab iot-gate-imx8, iot-din-imx8plus and iot-gate-imx8plus.
 * Matching Mender update artifacts for the above configurations.
 * A Podman/Docker image with a pre-installed cross development toolchain (arm64) for C and C++.
 
@@ -89,6 +90,12 @@ For the iot-din-imx8plus device:
 edi -v project make iot-din-imx8plus.yml
 ```
 
+For the iot-gate-imx8plus device:
+
+``` bash
+edi -v project make iot-gate-imx8plus.yml
+```
+
 The resulting image can be copied to a USB stick (here /dev/sda)
 using the following command
 (**Please note that everything on the USB stick will be erased!**):
@@ -105,6 +112,13 @@ For the iot-din-imx8plus device:
 ``` bash
 sudo umount /dev/sda?
 sudo dd if=artifacts/iot-din-imx8plus.img of=/dev/sda bs=4M conv=fsync status=progress
+```
+
+For the iot-gate-imx8plus device:
+
+``` bash
+sudo umount /dev/sda?
+sudo dd if=artifacts/iot-gate-imx8plus.img of=/dev/sda bs=4M conv=fsync status=progress
 ```
 
 **Warning (iot-gate-imx8): The image requires u-boot version 2.0 or above!** Please follow the
@@ -140,6 +154,12 @@ For the iot-din-imx8plus device:
 scp artifacts/iot-din-imx8plus.img compulab@IP_ADDRESS:
 ```
 
+For the iot-gate-imx8plus device:
+
+``` bash
+scp artifacts/iot-gate-imx8plus.img compulab@IP_ADDRESS:
+```
+
 Access the device:
 
 ``` bash
@@ -158,6 +178,12 @@ For the iot-din-imx8plus device:
 
 ``` bash
 sudo dd if=iot-din-imx8plus.img of=/dev/mmcblk2 bs=4M conv=fsync status=progress
+```
+
+For the iot-gate-imx8plus device:
+
+``` bash
+sudo dd if=iot-gate-imx8plus.img of=/dev/mmcblk2 bs=4M conv=fsync status=progress
 ```
 
 Now you can remove the power supply and the USB stick from the device.
